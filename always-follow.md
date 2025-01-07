@@ -11,6 +11,10 @@ Refactor all selected components in @ using the following rules @
 - Write clean, documented code
 - Implement proper error handling
 
+## Contact Information
+- Primary Email: info@fonteid.com
+- Secondary Email: fontetrade@gmail.com
+
 ### Always follow these rules
 - Always build the project after completing any task.
 - Use the command: npx vite build
