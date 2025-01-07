@@ -30,21 +30,77 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
-            <ul className="space-y-4">
-              <li className="flex items-center">
-                <MapPin size={20} className="mr-2 text-[#B49A5E]" />
-                <span className="text-gray-400">Textile city warehouse #264 – Dubai</span>
-              </li>
-              <li className="flex items-center">
-                <Phone size={20} className="mr-2 text-[#B49A5E]" />
-                <span className="text-gray-400">+971 50 986 1949</span>
-              </li>
-              <li className="flex items-center">
-                <Mail size={20} className="mr-2 text-[#B49A5E]" />
-                <span className="text-gray-400">info@fonte.net</span>
-              </li>
-            </ul>
+            <h3 className="text-lg font-semibold mb-4">Our Showrooms</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Dubai Location */}
+              <div className="space-y-6">
+                <div className="flex items-start space-x-3">
+                  <MapPin size={20} className="mr-2 text-[#B49A5E] mt-1 flex-shrink-0" />
+                  <div className="text-gray-400">
+                    <p className="font-semibold text-[#B49A5E]">Dubai</p>
+                    <p>WH 10, HEIRS OF LAHEJ KHALIFA AL BASHTI</p>
+                    <p>P.O.BOX: 128093</p>
+                    <p>Dubai - UAE</p>
+                  </div>
+                </div>
+                <div className="space-y-3 pl-7">
+                  <div className="flex items-center">
+                    <Phone size={20} className="mr-2 text-[#B49A5E] flex-shrink-0" />
+                    <span className="text-gray-400 whitespace-nowrap">+971 43442736 (UAE)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Phone size={20} className="mr-2 text-[#B49A5E] flex-shrink-0" />
+                    <span className="text-gray-400 whitespace-nowrap">+971 55654260 (UAE)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sharjah Location */}
+              <div className="space-y-6">
+                <div className="flex items-start space-x-3">
+                  <MapPin size={20} className="mr-2 text-[#B49A5E] mt-1 flex-shrink-0" />
+                  <div className="text-gray-400">
+                    <p className="font-semibold text-[#B49A5E]">Sharjah</p>
+                    <p>Shop No. 1, Ground Floor</p>
+                    <p>Industrial Area 6</p>
+                    <p>Sharjah - UAE</p>
+                  </div>
+                </div>
+                <div className="space-y-3 pl-7">
+                  <div className="flex items-center">
+                    <Phone size={20} className="mr-2 text-[#B49A5E] flex-shrink-0" />
+                    <span className="text-gray-400 whitespace-nowrap">+968 92310740 (Oman)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Kochin Location - Full Width */}
+              <div className="space-y-6 md:col-span-2">
+                <div className="flex items-start space-x-3">
+                  <MapPin size={20} className="mr-2 text-[#B49A5E] mt-1 flex-shrink-0" />
+                  <div className="text-gray-400">
+                    <p className="font-semibold text-[#B49A5E]">Kochin</p>
+                    <p>Shop No. 145, First Floor</p>
+                    <p>Edapally</p>
+                    <p>Kochin, Kerala - India</p>
+                  </div>
+                </div>
+                <div className="space-y-3 pl-7">
+                  <div className="flex items-center">
+                    <Phone size={20} className="mr-2 text-[#B49A5E] flex-shrink-0" />
+                    <span className="text-gray-400 whitespace-nowrap">+91 1234567890 (India)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email - Full Width */}
+              <div className="md:col-span-2 pl-7">
+                <div className="flex items-center">
+                  <Mail size={20} className="mr-2 text-[#B49A5E] flex-shrink-0" />
+                  <span className="text-gray-400">info@fonteid.com</span>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div>

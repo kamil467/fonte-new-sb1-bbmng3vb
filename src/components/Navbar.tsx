@@ -10,11 +10,11 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <span className="flex items-center">
               <Mail size={16} className="mr-2" />
-              info@fonte.net
+              info@fonteid.net
             </span>
             <span className="flex items-center">
               <Phone size={16} className="mr-2" />
-              +971 50 986 1949
+              +971 43442736 (UAE)
             </span>
           </div>
         </div>
