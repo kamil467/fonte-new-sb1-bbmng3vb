@@ -7,13 +7,8 @@ const Footer = () => {
     <footer className="bg-black text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Logo and Description */}
+          {/* Description */}
           <div className="lg:col-span-2">
-            <img 
-              src="https://ik.imagekit.io/kamil467/fonte_logo.jpeg?updatedAt=1736186947621" 
-              alt="Fonte" 
-              className="h-12 mb-2"
-            />
             <p className="text-gray-400 text-sm">
               Luxury furnishing solutions for discerning clients.
             </p>

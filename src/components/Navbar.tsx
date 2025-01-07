@@ -23,7 +23,7 @@ const Navbar = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center">
-              <img src="https://ik.imagekit.io/kamil467/fonte_logo.jpeg?updatedAt=1736186947621" 
+              <img src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
                    alt="Fonte" 
                    className="h-12" />
             </Link>
