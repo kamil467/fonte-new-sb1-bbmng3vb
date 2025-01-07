@@ -1,6 +1,6 @@
 # mobile responsiveness
 # site theme
-## Primary Color : #EDD8AF , #000000
+## Primary Color : #EDD8AF , #000000 ,#dfc484
 ## Secondary: #B49A5E,#776944, #D0B265
 
 Refactor all selected components in @ using the following rules @

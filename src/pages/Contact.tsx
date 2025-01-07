@@ -3,14 +3,14 @@ import { Mail, Phone } from 'lucide-react';
 
 const Contact = () => {
   return (
-    <div className="py-16">
+    <div className="py-16 bg-[#B49A5E] bg-opacity-5">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-center mb-12">Contact Us</h1>
+        <h1 className="text-4xl font-bold text-center mb-12 text-[#776944]">Contact Us</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 text-[#776944]">Get in Touch</h2>
             <form className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>

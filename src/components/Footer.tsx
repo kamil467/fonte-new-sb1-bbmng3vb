@@ -9,6 +9,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Description */}
           <div className="lg:col-span-2">
+          <img 
+              src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
+              alt="Fonte" 
+              className="h-12 mb-2"
+            />
             <p className="text-gray-400 text-sm">
               Luxury furnishing solutions for discerning clients.
             </p>

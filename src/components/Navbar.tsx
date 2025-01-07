@@ -26,6 +26,10 @@ const Navbar = () => {
               <img src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
                    alt="Fonte" 
                    className="h-12" />
+ <img src="https://ik.imagekit.io/kamil467/Fonte/logo_text.png?updatedAt=1736279445015" 
+                   alt="Fonte" 
+                   className="h-12" />
+
             </Link>
             <div className="flex space-x-8">
               <Link to="/" className="text-black hover:text-[#B49A5E]">Home</Link>
