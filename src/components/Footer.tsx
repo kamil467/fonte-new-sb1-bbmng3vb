@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { Facebook, Instagram, Mail, MapPin, Phone, Globe } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -43,8 +43,10 @@ const Footer = () => {
                     <Phone size={14} className="mr-1 text-[#B49A5E]" />
                     <span>+971 55654260</span>
                   </div>
+                  
                 </div>
               </div>
+             
             </div>
           </div>
 
@@ -53,9 +55,9 @@ const Footer = () => {
             <div className="flex items-start space-x-2">
               <MapPin size={16} className="text-[#B49A5E] mt-1 flex-shrink-0" />
               <div className="text-gray-400 text-sm">
-                <p className="font-semibold text-[#B49A5E]">Sharjah</p>
-                <p>Shop No. 1, Ground Floor</p>
-                <p>Industrial Area 6, Sharjah - UAE</p>
+                <p className="font-semibold text-[#B49A5E]">Muscat</p>
+                <p>Seeb Souq, Near Seeb Police Station</p>
+                <p>Muscat - Oman</p>
                 <div className="flex items-center mt-1">
                   <Phone size={14} className="mr-1 text-[#B49A5E]" />
                   <span>+968 92310740</span>
@@ -77,10 +79,6 @@ const Footer = () => {
                     <Phone size={14} className="mr-1 text-[#B49A5E]" />
                     <span>+91 1234567890</span>
                   </div>
-                  <div className="flex items-center">
-                    <Mail size={14} className="mr-1 text-[#B49A5E]" />
-                    <span>info@fonteid.com</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -89,18 +87,32 @@ const Footer = () => {
 
         {/* Social Links */}
         <div className="flex justify-center space-x-4 mt-6 pt-4 border-t border-gray-800">
+          {/* Common Email Address */}
+          <div className="flex flex-col items-center justify-center w-full mb-4 space-y-2">
+            <div className="flex items-center">
+              <Mail size={14} className="mr-1 text-[#B49A5E]" />
+              <span className="text-gray-400">info@fonteid.com</span>
+            </div>
+            <div className="flex items-center">
+              <Mail size={14} className="mr-1 text-[#B49A5E]" />
+              <span className="text-gray-400">fontetrade@gmail.com</span>
+            </div>
+          </div>
           <a href="https://www.facebook.com/fonteid" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
             <Facebook size={20} />
           </a>
-          <a href="https://www.instagram.com/fonteid" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
+          <a href="https://www.instagram.com/fonte_i.d" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
             <Instagram size={20} />
           </a>
           <a href="mailto:info@fonteid.com" className="text-gray-400 hover:text-[#B49A5E]">
             <Mail size={20} />
           </a>
+          <a href="https://www.fonteid.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
+            <Globe size={20} />
+          </a>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Fonte Furnishing LLC. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Fonte General Trading LLC. All rights reserved.</p>
         </div>
       </div>
     </footer>
