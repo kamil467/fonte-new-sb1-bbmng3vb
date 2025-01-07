@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Drapery } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import GoogleMap from './components/GoogleMap';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -24,7 +23,6 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
-        <GoogleMap />
         <Footer />
       </div>
     </Router>
