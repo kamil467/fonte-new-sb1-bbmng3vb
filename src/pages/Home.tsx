@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import GoogleMap from '../components/GoogleMap';
 
 const Home = () => {
   return (
@@ -77,8 +76,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      <GoogleMap />
     </div>
   );
 }
