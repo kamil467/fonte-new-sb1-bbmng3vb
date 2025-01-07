@@ -50,7 +50,17 @@ const Contact = () => {
                 <div className="flex items-center">
                   <Phone className="w-5 h-5 text-[#B49A5E]" />
                   <div className="ml-4">
-                    <p className="text-gray-600">+971 50 986 1949</p>
+                    <p className="text-gray-600">+971 43442736 (UAE) / +971 55654260 (UAE)</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <Phone className="w-5 h-5 text-[#B49A5E]" />
+                  <div className="ml-4">
+                    <p className="text-gray-600">+968 92310740 (Oman)</p>
+                  </div>
+
+                  <div className="ml-4">
+                    <p className="text-gray-600">+91 123456789 (India)</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -77,10 +87,10 @@ const Contact = () => {
         {/* Google Maps Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-6">Our Locations</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-x-auto">
             {/* Dubai Location */}
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-[#B49A5E]">Dubai Office</h3>
+              <h3 className="text-lg font-semibold text-[#B49A5E]">UAE Office</h3>
               <div className="h-[300px] w-full">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1804.3787633310155!2d55.30703873355741!3d25.24509059016152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f439940578155%3A0x9755b6b615831e7f!2sFONTE%20GENERAL%20TRADING%20LLC!5e0!3m2!1sen!2snl!4v1736245183166!5m2!1sen!2snl"
@@ -109,6 +119,24 @@ const Contact = () => {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Fonte Oman Location"
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+
+                     {/* Kerala location Location */}
+                     <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-[#B49A5E]">India Office</h3>
+              <div className="h-[300px] w-full">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.925697226994!2d76.30401307531902!3d10.022990390083564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b080da8b1d0f263%3A0x409389047932793d!2sRobodigx!5e0!3m2!1sen!2sqa!4v1736274383560!5m2!1sen!2sqa"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Fonte India Location"
                   className="rounded-lg"
                 />
               </div>
