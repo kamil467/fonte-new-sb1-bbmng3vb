@@ -88,7 +88,7 @@ const featuredCollections = [
   {
     title: "Premium Curtains",
     description: "Elegant curtains crafted from the finest fabrics",
-    image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    image: "https://ik.imagekit.io/kamil467/Fonte/curtain_2.jpeg?updatedAt=1736275811553",
     link: "/products"
   },
   {
