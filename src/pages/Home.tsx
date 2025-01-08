@@ -48,21 +48,28 @@ const Home = () => {
       <section className="py-16 bg-[#B49A5E] bg-opacity-5">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-16 text-[#776944]">Find the best Fabrics for Curtains & Upholstery</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+          <div className="space-y-16">
             {featuredCollections.map((collection, index) => (
-              <Link key={index} to={collection.link} className="group block relative">
-                <div className="aspect-[4/5] relative overflow-hidden">
+              <div key={index} className={`flex flex-col ${index % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-12 items-center`}>
+                <div className="w-full md:w-1/2">
                   <img 
                     src={collection.image} 
                     alt={collection.title} 
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-[500px] object-cover rounded-lg"
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent pt-20 pb-8 px-8">
-                    <h3 className="text-3xl font-semibold mb-3 text-white">{collection.title}</h3>
-                    <p className="text-white/90 text-lg leading-relaxed">{collection.description}</p>
-                  </div>
                 </div>
-              </Link>
+                <div className="w-full md:w-1/2 space-y-6">
+                  <div className="text-sm uppercase tracking-wider text-[#B49A5E]">Elegance • Timeless</div>
+                  <h3 className="text-5xl font-bold text-[#776944]">{collection.title}</h3>
+                  <p className="text-gray-600 text-lg leading-relaxed">{collection.description}</p>
+                  <Link 
+                    to={collection.link}
+                    className="inline-block bg-black text-white px-8 py-3 rounded-full hover:bg-[#776944] transition-colors"
+                  >
+                    About Us →
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -123,14 +130,14 @@ document.head.appendChild(styleSheet);
 
 const featuredCollections = [
   {
-    title: "Curtains",
-    description: "Treat your sunny room and windows with elegant and beautifully finished look draperies. Available in many widths & lengths.",
+    title: "Modern Style\nTimeless Charm",
+    description: "Discover our premium curtain collection, featuring elegant draperies that transform your windows with sophistication. Available in diverse styles, patterns, and lengths to perfectly complement your space.",
     image: "https://ik.imagekit.io/kamil467/Fonte/curtain_4.jpeg?updatedAt=1736278429450",
     link: "/products"
   },
   {
-    title: "Upholstery",
-    description: "A delightful collection of upholsteries that brings with it a fresh burst of colours and classic grandeur.",
+    title: "Classic Design\nModern Comfort",
+    description: "Experience our exquisite upholstery collection that brings together timeless elegance and contemporary comfort. Each piece is crafted to add a touch of luxury to your living space.",
     image: "https://ik.imagekit.io/kamil467/Fonte/bedsheet_2.jpeg?updatedAt=1736275811337",
     link: "/products"
   }
