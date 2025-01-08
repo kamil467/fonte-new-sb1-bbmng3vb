@@ -75,6 +75,97 @@ const Home = () => {
         </div>
       </section>
 
+
+
+      {/* Collection Grid Section */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-16">
+            <h2 className="text-6xl font-bold max-w-2xl">Explore Our Proudly Collection</h2>
+            <Link 
+              to="/products" 
+              className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full hover:bg-[#776944] transition-colors"
+            >
+              View More
+              <span className="w-6 h-6 flex items-center justify-center border border-white rounded-full">→</span>
+            </Link>
+          </div>
+          
+          <p className="text-gray-600 text-lg mb-12 text-right max-w-xl ml-auto">
+            Fonte will showcase its vision of contemporary architecture, interior design trends, and innovative living at Dubai Design Week 2024.
+          </p>
+
+          <div className="grid grid-cols-12 gap-6">
+            {/* Mondrian - Large */}
+            <div className="col-span-12 md:col-span-4 relative group">
+              <div className="relative h-[400px] rounded-2xl overflow-hidden">
+                <img 
+                  src="https://ik.imagekit.io/kamil467/Fonte/curtain_1.jpeg?updatedAt=1736275811539" 
+                  alt="Mondrian Collection" 
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
+                  <div className="flex justify-between items-center w-full">
+                    <h3 className="text-3xl font-bold text-white">Mondrian</h3>
+                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Nirnia - Extra Large */}
+            <div className="col-span-12 md:col-span-8 relative group">
+              <div className="relative h-[400px] rounded-2xl overflow-hidden">
+                <img 
+                  src="https://ik.imagekit.io/kamil467/Fonte/curtain_2.jpeg?updatedAt=1736275811553" 
+                  alt="Nirnia Collection" 
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
+                  <div className="flex justify-between items-center w-full">
+                    <h3 className="text-3xl font-bold text-white">Nirnia</h3>
+                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Artex */}
+            <div className="col-span-12 md:col-span-8 relative group">
+              <div className="relative h-[400px] rounded-2xl overflow-hidden">
+                <img 
+                  src="https://ik.imagekit.io/kamil467/Fonte/curtain_3.jpeg?updatedAt=1736275811539" 
+                  alt="Artex Collection" 
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
+                  <div className="flex justify-between items-center w-full">
+                    <h3 className="text-3xl font-bold text-white">Artex</h3>
+                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Collections */}
+            <div className="col-span-12 md:col-span-4 relative group">
+              <div className="relative h-[400px] rounded-2xl overflow-hidden">
+                <img 
+                  src="https://ik.imagekit.io/kamil467/Fonte/curtain_4.jpeg?updatedAt=1736278429450" 
+                  alt="Additional Collection" 
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
+                  <div className="flex justify-between items-center w-full">
+                    <h3 className="text-3xl font-bold text-white">Fonte</h3>
+                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="py-16 bg-[#B49A5E] bg-opacity-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -104,7 +195,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
       <GoogleMap />
 
     </div>
