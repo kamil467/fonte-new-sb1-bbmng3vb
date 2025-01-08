@@ -12,12 +12,32 @@ const Home = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="text-center text-white">
-            <h1 className="text-5xl font-bold mb-4">Luxury Furnishing Solutions</h1>
-            <p className="text-xl mb-8">Elevate Your Space with Premium Fabrics & Design</p>
+          <div className="text-center text-white space-y-6">
+            <h1 
+              className="text-5xl font-bold mb-4 opacity-0 animate-[fadeInUp_1s_ease-out_0.3s_forwards]"
+              style={{
+                animation: 'fadeInUp 1s ease-out 0.3s forwards',
+                opacity: 0,
+              }}
+            >
+              Luxury Furnishing Solutions
+            </h1>
+            <p 
+              className="text-xl mb-8 opacity-0"
+              style={{
+                animation: 'fadeInUp 1s ease-out 0.6s forwards',
+                opacity: 0,
+              }}
+            >
+              Elevate Your Space with Premium Fabrics & Design
+            </p>
             <Link 
               to="/products" 
-              className="bg-[#B49A5E] text-white px-8 py-3 rounded hover:bg-[#776944] transition-colors"
+              className="inline-block bg-[#B49A5E] text-white px-8 py-3 rounded hover:bg-[#776944] transition-colors opacity-0"
+              style={{
+                animation: 'fadeInUp 1s ease-out 0.9s forwards',
+                opacity: 0,
+              }}
             >
               Explore Collections
             </Link>
@@ -83,6 +103,23 @@ const Home = () => {
     </div>
   );
 }
+
+const styles = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
 
 const featuredCollections = [
   {
