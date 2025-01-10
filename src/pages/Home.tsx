@@ -107,7 +107,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
                   <div className="flex justify-between items-center w-full">
                     <h3 className="text-3xl font-bold text-white">Mondrian</h3>
-                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+                   
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
                   <div className="flex justify-between items-center w-full">
                     <h3 className="text-3xl font-bold text-white">Nirnia</h3>
-                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+
                   </div>
                 </div>
               </div>
@@ -141,7 +141,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
                   <div className="flex justify-between items-center w-full">
                     <h3 className="text-3xl font-bold text-white">Artex</h3>
-                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+
                   </div>
                 </div>
               </div>
@@ -158,7 +158,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-8">
                   <div className="flex justify-between items-center w-full">
                     <h3 className="text-3xl font-bold text-white">Fonte</h3>
-                    <span className="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black">→</span>
+
                   </div>
                 </div>
               </div>
