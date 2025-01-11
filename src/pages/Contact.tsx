@@ -144,7 +144,7 @@ const Contact = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Name <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     name="name"
@@ -155,7 +155,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email<span className="text-red-500">*</span></label>
                   <input
                     type="email"
                     name="email"
@@ -166,7 +166,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone<span className="text-red-500">*</span></label>
                   <input
                     type="tel"
                     name="phone"
@@ -177,7 +177,7 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Message<span className="text-red-500">*</span></label>
                   <textarea
                     rows={4}
                     name="message"
