@@ -9,10 +9,12 @@ import ProductDetail from './pages/ProductDetail';
 import Expertise from './pages/Expertise';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
+       <ScrollToTop />  {/* Add ScrollToTop component to fix scrolling issue in router application */}
       <div className="min-h-screen bg-white">
         <Navbar />
         <Routes>
