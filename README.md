@@ -38,6 +38,7 @@ The file handles the  server side redirects for single page application without 
 - [X] website link title text and image (logo to be resized)  - Done
 - [X] Supabase form integration  : form integration done - additional work( restore previous contents address and maps as it was replaced by AI agent) and make all the fields required. - Done
 - [X] Live Chat integration.
+- [X] Google Map updated to inline with design of silkwea website: - Done
 
 ### Logo Image Requirements:
 Different size and with different color variations logo requried throughout the website.
@@ -50,3 +51,7 @@ A single logo image cannot meet all the requirements.
 
 ### Color Requirements:
 - Product Details List Tab BG : #f7f6f6
+
+### Test Google Map Embed URL:
+
+https://jsfiddle.net/591ks6c0/
