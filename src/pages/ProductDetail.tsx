@@ -236,7 +236,7 @@ const ProductDetail: React.FC = () => {
                 </Tab>
               </div>
 
-              <div className="bg-white p-8">
+              <div className="bg-[#f7f6f6] p-8">
                 {activeTab === 'DESCRIPTION' && (
                   <div className="space-y-4">
                     <div className="flex justify-between border-b pb-4">
@@ -303,7 +303,7 @@ const ProductDetail: React.FC = () => {
             </div>
 
             {/* Mobile Accordion Tabs */}
-            <div className="md:hidden">
+            <div className="md:hidden bg-[#f7f6f6]">
               <Tab
                 title="Description"
                 active={activeTab === 'DESCRIPTION'}

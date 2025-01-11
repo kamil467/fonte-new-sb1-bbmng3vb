@@ -32,9 +32,10 @@ The file handles the  server side redirects for single page application without 
 
 
 ### Task To be done:
-- [X] Mobile view - Product Details page - Tab Title style change 
+- [X] Mobile view - Product Details page - Tab Title style change   - Done : spacing required between tab title and tabs
+- [X] Mobile view - Product Details page - Image and description spacing adjustment   - Done
 - [X] Mobile view - Left Menu - Logo and menu width adjustment
-- [X] website link title text and image (logo to be resized)
+- [X] website link title text and image (logo to be resized)  - Done
 - [X] Supabase form integration.
 - [X] Live Chat integration.
 
@@ -45,3 +46,7 @@ A single logo image cannot meet all the requirements.
 - Footer logo
 - website meta header logo - use png images 
 - logo for mobile menu/view
+
+
+### Color Requirements:
+- Product Details List Tab BG : #f7f6f6
