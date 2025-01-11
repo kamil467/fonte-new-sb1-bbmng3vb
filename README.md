@@ -41,7 +41,7 @@ The file handles the  server side redirects for single page application without 
 ### Logo Image Requirements:
 Different size and with different color variations logo requried throughout the website.
 A single logo image cannot meet all the requirements.
-- Header logo
+- Header logo 
 - Footer logo
-- website meta header logo
+- website meta header logo - use png images 
 - logo for mobile menu/view
