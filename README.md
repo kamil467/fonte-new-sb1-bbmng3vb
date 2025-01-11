@@ -29,3 +29,11 @@ The file handles the  server side redirects for single page application without 
 - top navigation bar  : left menu in mobile view
 - grid view image in home page : carousel view in mobile view
 - product details page : collapse and expandable tabs in mobile view
+
+
+### Task To be done:
+- [X] Mobile view - Product Details page - Tab Title style change 
+- [X] Mobile view - Left Menu - Logo and menu width adjustment
+- [X] website link title text and image (logo to be resized)
+- [X] Supabase form integration.
+- [X] Live Chat integration.
