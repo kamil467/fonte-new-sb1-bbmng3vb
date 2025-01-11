@@ -208,7 +208,7 @@ const Contact = () => {
               <h3 className="text-lg font-semibold text-[#B49A5E]">UAE Office</h3>
               <div className="h-[300px] w-full">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1804.3787633310155!2d55.30703873355741!3d25.24509059016152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f439940578155%3A0x9755b6b615831e7f!2sFONTE%20GENERAL%20TRADING%20LLC!5e0!3m2!1sen!2snl!4v1736245183166!5m2!1sen!2snl"
+                  src="https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -226,7 +226,7 @@ const Contact = () => {
               <h3 className="text-lg font-semibold text-[#B49A5E]">Oman Office</h3>
               <div className="h-[300px] w-full">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.7792392667748!2d58.176206675731095!3d23.68385147871581!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e8de4cc6d0978f7%3A0x281c53712d20f98!2sBLUE%20BIRD%20TRAVELS%20-%20SEEB!5e0!3m2!1sen!2snl!4v1736248149981!5m2!1sen!2snl"
+                  src="https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -244,7 +244,7 @@ const Contact = () => {
               <h3 className="text-lg font-semibold text-[#B49A5E]">India Office</h3>
               <div className="h-[300px] w-full">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.925697226994!2d76.30401307531902!3d10.022990390083564!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b080da8b1d0f263%3A0x409389047932793d!2sRobodigx!5e0!3m2!1sen!2sqa!4v1736274383560!5m2!1sen!2sqa"
+                  src="https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
