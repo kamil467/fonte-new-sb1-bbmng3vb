@@ -19,10 +19,21 @@ const Navbar = () => {
   // Mobile Navigation Overlay
   const MobileNav = () => (
     <div className={`fixed inset-0 bg-white z-50 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
-      <div className="flex justify-between items-center p-4 border-b">
+     
+     <div className="flex justify-between items-center p-4 border-b">
         <button onClick={toggleMobileMenu} className="p-2">
           <X className="w-6 h-6" />
         </button>
+        <img 
+            src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
+            alt="Fonte" 
+            className="h-8 items-center" 
+          />
+             <div className="w-10"></div>
+      </div>
+     
+      <div className="flex justify-between items-center p-4 border-b">
+       
         <h2 className="text-xl font-bold">MENU</h2>
         <div className="w-10"></div>
       </div>
@@ -73,6 +84,11 @@ const Navbar = () => {
             alt="Fonte" 
             className="h-8" 
           />
+            <img 
+                src="https://ik.imagekit.io/kamil467/Fonte/logo_text.png?updatedAt=1736279445015" 
+                alt="Fonte" 
+                className="h-12" 
+              />
         </Link>
         <div className="w-10"></div>
       </header>

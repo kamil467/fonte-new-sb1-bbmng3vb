@@ -36,7 +36,7 @@ The file handles the  server side redirects for single page application without 
 - [X] Mobile view - Product Details page - Image and description spacing adjustment   - Done
 - [X] Mobile view - Left Menu - Logo and menu width adjustment
 - [X] website link title text and image (logo to be resized)  - Done
-- [X] Supabase form integration  : form integration done - additional work( restore previous contents address and maps as it was replaced by AI agent) , add country field and make all the fields required.
+- [X] Supabase form integration  : form integration done - additional work( restore previous contents address and maps as it was replaced by AI agent) and make all the fields required. - Done
 - [X] Live Chat integration.
 
 ### Logo Image Requirements:
