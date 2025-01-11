@@ -37,3 +37,11 @@ The file handles the  server side redirects for single page application without 
 - [X] website link title text and image (logo to be resized)
 - [X] Supabase form integration.
 - [X] Live Chat integration.
+
+### Logo Image Requirements:
+Different size and with different color variations logo requried throughout the website.
+A single logo image cannot meet all the requirements.
+- Header logo
+- Footer logo
+- website meta header logo
+- logo for mobile menu/view
