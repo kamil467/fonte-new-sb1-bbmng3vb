@@ -24,3 +24,8 @@ The file handles the  server side redirects for single page application without 
 ### Issues fixed:
  - Scroll issue in react application:
     implement scroll to top component in react application. 
+
+### Responisve Design Guide for HTML elements:
+- top navigation bar  : left menu in mobile view
+- grid view image in home page : carousel view in mobile view
+- product details page : collapse and expandable tabs in mobile view

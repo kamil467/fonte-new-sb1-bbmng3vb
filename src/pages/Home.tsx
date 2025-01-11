@@ -1,8 +1,11 @@
 import GoogleMap from '../components/GoogleMap';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Home = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   return (
     <div>
       <div className="relative h-[80vh]">
@@ -75,13 +78,13 @@ const Home = () => {
         </div>
       </section>
 
-
-
       {/* Collection Grid Section */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <h2 className="text-6xl font-bold max-w-2xl">Explore Our Proudly Collection</h2>
+          <div className="flex justify-between items-center mb-16 flex-col md:flex-row gap-4">
+            <h2 className="text-4xl md:text-6xl font-bold max-w-2xl text-center md:text-left">
+              Explore Our Proudly Collection
+            </h2>
             <Link 
               to="/products" 
               className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full hover:bg-[#776944] transition-colors"
@@ -91,11 +94,56 @@ const Home = () => {
             </Link>
           </div>
           
-          <p className="text-gray-600 text-lg mb-12 text-right max-w-xl ml-auto">
+          <p className="text-gray-600 text-lg mb-12 text-center md:text-right max-w-xl md:ml-auto">
             Fonte will showcase its vision of contemporary architecture, interior design trends, and innovative living at Dubai Design Week 2024.
           </p>
 
-          <div className="grid grid-cols-12 gap-6">
+          {/* Mobile Carousel */}
+          <div className="relative md:hidden">
+            <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {featuredCollections.map((collection, index) => (
+                  <div key={index} className="w-full flex-shrink-0">
+                    <div className="relative h-[400px] rounded-2xl overflow-hidden">
+                      <img 
+                        src={collection.image} 
+                        alt={collection.title} 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                        <div className="text-white">
+                          <h3 className="text-2xl font-bold mb-2">{collection.title}</h3>
+                          <p className="text-sm opacity-80">{collection.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Carousel Controls */}
+            <button 
+              onClick={() => setCurrentSlide(curr => Math.max(0, curr - 1))}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
+              disabled={currentSlide === 0}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button 
+              onClick={() => setCurrentSlide(curr => Math.min(featuredCollections.length - 1, curr + 1))}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
+              disabled={currentSlide === featuredCollections.length - 1}
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Desktop Grid */}
+          <div className="hidden md:grid grid-cols-12 gap-6">
             {/* Mondrian - Large */}
             <div className="col-span-12 md:col-span-4 relative group">
               <div className="relative h-[400px] rounded-2xl overflow-hidden">
@@ -196,10 +244,9 @@ const Home = () => {
         </div>
       </section>
       <GoogleMap />
-
     </div>
   );
-}
+};
 
 const styles = `
   @keyframes fadeInUp {

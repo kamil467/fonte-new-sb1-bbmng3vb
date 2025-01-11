@@ -1,24 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams, useLocation } from 'react-router-dom';
-import { ChevronRight, Maximize2 } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { ChevronRight, Maximize2, ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase, Product, ProductColor, ProductCareInstruction } from '../lib/supabase';
 
 interface TabProps {
+  title: string;
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  isMobile?: boolean;
 }
 
-const Tab: React.FC<TabProps> = ({ active, onClick, children }) => {
+const Tab: React.FC<TabProps> = ({ title, active, onClick, children, isMobile = false }) => {
+  if (isMobile) {
+    return (
+      <div className="border-b">
+        <button
+          onClick={onClick}
+          className="w-full px-4 py-3 flex justify-between items-center"
+        >
+          <span className="font-medium">{title}</span>
+          {active ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+        </button>
+        <div className={`px-4 pb-4 ${active ? 'block' : 'hidden'}`}>
+          {children}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <button
-      onClick={onClick}
-      className={`px-8 py-4 font-medium ${
-        active ? 'bg-white text-black' : 'bg-gray-100 text-gray-500'
-      }`}
-    >
-      {children}
-    </button>
+    <div>
+      <button
+        onClick={onClick}
+        className={`px-8 py-4 font-medium ${
+          active ? 'bg-white text-black' : 'bg-gray-100 text-gray-500'
+        }`}
+      >
+        {title}
+      </button>
+      <div className={active ? 'block' : 'hidden'}>
+        {children}
+      </div>
+    </div>
   );
 };
 
@@ -43,7 +67,6 @@ const ProductDetail: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Fetch product with related data in a single query
       const { data: productData, error: productError } = await supabase
         .from('products')
         .select(`
@@ -102,27 +125,17 @@ const ProductDetail: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || !product) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
+          <p className="text-red-600 mb-4">{error || 'Product not found'}</p>
           <button
             onClick={fetchProductDetails}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Try Again
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-xl">Product not found</p>
         </div>
       </div>
     );
@@ -195,92 +208,159 @@ const ProductDetail: React.FC = () => {
             </p>
           </div>
 
-          {/* Tabs */}
-          <div className="flex mb-6">
-            <Tab
-              active={activeTab === 'DESCRIPTION'}
-              onClick={() => setActiveTab('DESCRIPTION')}
-            >
-              Description
-            </Tab>
-            <Tab
-              active={activeTab === 'SPECIFICATIONS'}
-              onClick={() => setActiveTab('SPECIFICATIONS')}
-            >
-              Specifications
-            </Tab>
-            <Tab
-              active={activeTab === 'CAUTION'}
-              onClick={() => setActiveTab('CAUTION')}
-            >
-              Caution
-            </Tab>
-          </div>
+          {/* Product Information Tabs */}
+          <div className="mt-16">
+            {/* Desktop Tabs */}
+            <div className="hidden md:block">
+              <div className="flex space-x-1 mb-8">
+                <Tab 
+                  title="Description"
+                  active={activeTab === 'DESCRIPTION'} 
+                  onClick={() => setActiveTab('DESCRIPTION')}
+                >
+                 {/* Description */} 
+                </Tab>
+                <Tab 
+                  title="Specifications"
+                  active={activeTab === 'SPECIFICATIONS'} 
+                  onClick={() => setActiveTab('SPECIFICATIONS')}
+                >
+                {/* Specifications */}  
+                </Tab>
+                <Tab 
+                  title="Care Instructions"
+                  active={activeTab === 'CARE'} 
+                  onClick={() => setActiveTab('CARE')}
+                >
+                 {/* Care Instructions */} 
+                </Tab>
+              </div>
 
-          {/* Tab Content */}
-          <div className="bg-white p-8">
-            {activeTab === 'DESCRIPTION' && (
-              <div className="space-y-4">
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">REFERENCE</span>
-                  <span>{product.reference}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">COLLECTION</span>
-                  <span>{product.collection}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">COMPOSITION</span>
-                  <span>{product.composition.main}</span>
-                </div>
-                {product.composition.embroidery && (
-                  <div className="flex justify-between border-b pb-4">
-                    <span className="font-medium">EMBROIDERY</span>
-                    <span>{product.composition.embroidery}</span>
+              <div className="bg-white p-8">
+                {activeTab === 'DESCRIPTION' && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">REFERENCE</span>
+                      <span>{product.reference}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">COLLECTION</span>
+                      <span>{product.collection}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">COMPOSITION</span>
+                      <span>{typeof product.composition === 'object' ? product.composition.main : product.composition}</span>
+                    </div>
+                    {typeof product.composition === 'object' && product.composition.embroidery && (
+                      <div className="flex justify-between border-b pb-4">
+                        <span className="font-medium">EMBROIDERY</span>
+                        <span>{product.composition.embroidery}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === 'SPECIFICATIONS' && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">TECHNIQUE</span>
+                      <span>{product.technique}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">WIDTH</span>
+                      <span>{product.width}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">WEIGHT</span>
+                      <span>{product.weight}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">MARTINDALE</span>
+                      <span>{product.martindale}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">REPEATS</span>
+                      <span>{product.repeats}</span>
+                    </div>
+                    <div className="flex justify-between border-b pb-4">
+                      <span className="font-medium">END USE</span>
+                      <span>{product.end_use}</span>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'CARE' && (
+                  <div className="space-y-4">
+                    {careInstructions.map((instruction) => (
+                      <div key={instruction.id} className="flex justify-between border-b pb-4">
+                        <span className="font-medium">{instruction.icon}</span>
+                        <span>{instruction.instruction}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
-            )}
+            </div>
 
-            {activeTab === 'SPECIFICATIONS' && (
-              <div className="space-y-4">
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">TECHNIQUE</span>
-                  <span>{product.technique}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">WIDTH</span>
-                  <span>{product.width}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">WEIGHT</span>
-                  <span>{product.weight}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">MARTINDALE</span>
-                  <span>{product.martindale}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">REPEATS</span>
-                  <span>{product.repeats}</span>
-                </div>
-                <div className="flex justify-between border-b pb-4">
-                  <span className="font-medium">END USE</span>
-                  <span>{product.end_use}</span>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'CAUTION' && (
-              <div className="space-y-4">
-                {careInstructions.map((instruction) => (
-                  <div key={instruction.id} className="flex justify-between border-b pb-4">
-                    <span className="font-medium">{instruction.icon}</span>
-                    <span>{instruction.instruction}</span>
+            {/* Mobile Accordion Tabs */}
+            <div className="md:hidden">
+              <Tab
+                title="Description"
+                active={activeTab === 'DESCRIPTION'}
+                onClick={() => setActiveTab(activeTab === 'DESCRIPTION' ? '' : 'DESCRIPTION')}
+                isMobile
+              >
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="font-medium">Reference</div>
+                    <div>{product.reference}</div>
+                    <div className="font-medium">Collection</div>
+                    <div>{product.collection}</div>
+                    <div className="font-medium">Composition</div>
+                    <div>{typeof product.composition === 'object' ? product.composition.main : product.composition}</div>
+                    {typeof product.composition === 'object' && product.composition.embroidery && (
+                      <>
+                        <div className="font-medium">Embroidery</div>
+                        <div>{product.composition.embroidery}</div>
+                      </>
+                    )}
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              </Tab>
+
+              <Tab
+                title="Specifications"
+                active={activeTab === 'SPECIFICATIONS'}
+                onClick={() => setActiveTab(activeTab === 'SPECIFICATIONS' ? '' : 'SPECIFICATIONS')}
+                isMobile
+              >
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="font-medium">Width</div>
+                    <div>{product.width}</div>
+                    <div className="font-medium">Weight</div>
+                    <div>{product.weight}</div>
+                    <div className="font-medium">Martindale</div>
+                    <div>{product.martindale}</div>
+                    <div className="font-medium">End Use</div>
+                    <div>{product.end_use}</div>
+                  </div>
+                </div>
+              </Tab>
+
+              <Tab
+                title="Care Instructions"
+                active={activeTab === 'CARE'}
+                onClick={() => setActiveTab(activeTab === 'CARE' ? '' : 'CARE')}
+                isMobile
+              >
+                <ul className="list-disc pl-4 space-y-2">
+                  {careInstructions.map((instruction, index) => (
+                    <li key={index}>{instruction.instruction}</li>
+                  ))}
+                </ul>
+              </Tab>
+            </div>
           </div>
 
           {/* WhatsApp Button */}
@@ -288,7 +368,7 @@ const ProductDetail: React.FC = () => {
             onClick={() => {
               const phoneNumber = '+97477948040';
               const productUrl = window.location.origin + window.location.pathname;
-              const message = `Hello, I would like to request a quote for ${product?.name} (${selectedColor}). Product Link: ${productUrl}`;
+              const message = `Hello, I would like to request a quote for ${product.name} (${selectedColor}). Product Link: ${productUrl}`;
               const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
               window.open(whatsappUrl, '_blank');
             }}
