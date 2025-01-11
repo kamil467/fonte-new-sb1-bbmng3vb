@@ -105,7 +105,7 @@ const Home = () => {
                 className="flex transition-transform duration-300 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {featuredCollections.map((collection, index) => (
+                {additionalCollections.map((collection, index) => (
                   <div key={index} className="w-full flex-shrink-0">
                     <div className="relative h-[400px] rounded-2xl overflow-hidden">
                       <img 
@@ -116,7 +116,7 @@ const Home = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
                         <div className="text-white">
                           <h3 className="text-2xl font-bold mb-2">{collection.title}</h3>
-                          <p className="text-sm opacity-80">{collection.description}</p>
+                       {/* <p className="text-sm opacity-80">{collection.description}</p> */}  
                         </div>
                       </div>
                     </div>
@@ -134,9 +134,9 @@ const Home = () => {
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button 
-              onClick={() => setCurrentSlide(curr => Math.min(featuredCollections.length - 1, curr + 1))}
+              onClick={() => setCurrentSlide(curr => Math.min(additionalCollections.length - 1, curr + 1))}
               className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full"
-              disabled={currentSlide === featuredCollections.length - 1}
+              disabled={currentSlide === additionalCollections.length - 1}
             >
               <ChevronRight className="w-6 h-6" />
             </button>
@@ -302,5 +302,29 @@ const features = [
     icon: "💫"
   }
 ];
+
+const additionalCollections = [
+  {
+    title: "Mondrian",
+    image: "https://ik.imagekit.io/kamil467/Fonte/curtain_1.jpeg?updatedAt=1736275811539",
+   
+  },
+  {
+    title: "Nirnia",
+    image: "https://ik.imagekit.io/kamil467/Fonte/curtain_2.jpeg?updatedAt=1736275811553",
+    
+  },
+  {
+    title: "Artex",
+ 
+    image: "https://ik.imagekit.io/kamil467/Fonte/curtain_3.jpeg?updatedAt=1736275811539",
+   
+  },
+  {
+    title: "Fonte",
+    image: "https://ik.imagekit.io/kamil467/Fonte/curtain_4.jpeg?updatedAt=1736278429450",
+  }
+];
+
 
 export default Home;
