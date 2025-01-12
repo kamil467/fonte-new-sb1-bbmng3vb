@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Mail, MapPin, Phone, Globe } from 'lucide-react';
+import { FacebookIcon, Instagram, Mail, MapPin, Phone, Globe } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -15,13 +14,23 @@ const Footer = () => {
               className="h-12 mb-2"
             />
             <p className="text-gray-400 text-sm">
-              Luxury furnishing solutions for discerning clients.
+              Luxury furnishing solutions for discerning clients..
+              <br></br>
+              <br></br>
+              <div className="flex items-center">
+              <Mail size={14} className="mr-1 text-[#B49A5E]" />
+              <a className="text-gray-400" href="mailto:info@fonteid.com">info@fonteid.com</a>
+            </div>
+            <div className="flex items-center">
+              <Mail size={14} className="mr-1 text-[#B49A5E]" />
+              <a className="text-gray-400" href="mailto:fontetrade@gmail.com">fontetrade@gmail.com</a>
+            </div>
             </p>
           </div>
           
           {/* Quick Links */}
           <div className="lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-2">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-2 text-[#B49A5E]" >Quick Links</h3>
             <ul className="space-y-1">
               <li><Link to="/" className="text-gray-400 hover:text-[#B49A5E] text-sm">Home</Link></li>
               <li><Link to="/products" className="text-gray-400 hover:text-[#B49A5E] text-sm">Collections</Link></li>
@@ -91,20 +100,9 @@ const Footer = () => {
         </div>
 
         {/* Social Links */}
-        <div className="flex justify-center space-x-4 mt-6 pt-4 border-t border-gray-800">
-          {/* Common Email Address */}
-          <div className="flex flex-col items-center justify-center w-full mb-4 space-y-2">
-            <div className="flex items-center">
-              <Mail size={14} className="mr-1 text-[#B49A5E]" />
-              <span className="text-gray-400">info@fonteid.com</span>
-            </div>
-            <div className="flex items-center">
-              <Mail size={14} className="mr-1 text-[#B49A5E]" />
-              <span className="text-gray-400">fontetrade@gmail.com</span>
-            </div>
-          </div>
+        <div className="flex items-center justify-center space-x-4 mt-6 pt-4 border-t border-gray-800">
           <a href="https://www.facebook.com/fonteid" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
-            <Facebook size={20} />
+            <FacebookIcon size={20} />
           </a>
           <a href="https://www.instagram.com/fonte_i.d" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
             <Instagram size={20} />
