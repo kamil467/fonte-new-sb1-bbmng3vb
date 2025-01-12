@@ -1,10 +1,20 @@
 import GoogleMap from '../components/GoogleMap';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
+
+  // Auto-advance testimonials
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTestimonialSlide(curr => (curr === testimonials.length - 3 ? 0 : curr + 1));
+    }, 3000); // Change testimonial every 3 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div>
@@ -214,6 +224,76 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 bg-[#f7f6f6]">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
+            <p className="text-gray-600">Discover why clients choose Fonte for their luxury furnishing needs</p>
+          </div>
+          
+          <div className="relative">
+            <div className="overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentTestimonialSlide * (100 / 3)}%)` }}
+              >
+                {/* Duplicate testimonials for infinite loop effect */}
+                {[...testimonials, ...testimonials].map((testimonial, index) => (
+                  <div 
+                    key={index} 
+                    className="w-1/3 flex-shrink-0 px-2 md:px-4"
+                    style={{ transition: 'opacity 0.3s ease-in-out' }}
+                  >
+                    <div className="bg-white p-3 md:p-6 rounded-lg shadow-md h-full">
+                      <div className="flex items-center mb-4">
+                        <img 
+                          src={testimonial.image} 
+                          alt={testimonial.name} 
+                          className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover mr-2 md:mr-4"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-sm md:text-lg">{testimonial.name}</h3>
+                          <p className="text-gray-600 text-xs md:text-sm">{testimonial.location}</p>
+                        </div>
+                      </div>
+                      <p className="text-gray-700 italic mb-4 text-sm md:text-base">"{testimonial.testimonial}"</p>
+                      <div className="flex text-[#B49A5E]">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-3 h-3 md:w-5 md:h-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Dots Navigation */}
+            <div className="flex justify-center space-x-2 mt-6">
+              {testimonials.slice(0, testimonials.length - 2).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonialSlide(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    currentTestimonialSlide === index ? 'bg-[#B49A5E]' : 'bg-gray-300'
+                  }`}
+                  aria-label={`Go to testimonial group ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-16 bg-[#B49A5E] bg-opacity-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -326,5 +406,31 @@ const additionalCollections = [
   }
 ];
 
+const testimonials = [
+  {
+    name: "Sarah Johnson",
+    location: "Dubai, UAE",
+    image: "https://ik.imagekit.io/kamil467/Fonte/testimonial_1.jpeg?updatedAt=1736279445015",
+    testimonial: "Fonte transformed our home with their exquisite collection of curtains and furnishings. Their attention to detail and commitment to quality is unmatched."
+  },
+  {
+    name: "Ahmed Al-Sayed",
+    location: "Muscat, Oman",
+    image: "https://ik.imagekit.io/kamil467/Fonte/testimonial_2.jpeg?updatedAt=1736279445015",
+    testimonial: "Working with Fonte was a pleasure from start to finish. Their team's expertise and professionalism made the entire process seamless."
+  },
+  {
+    name: "Priya Patel",
+    location: "Kerala, India",
+    image: "https://ik.imagekit.io/kamil467/Fonte/testimonial_3.jpeg?updatedAt=1736279445015",
+    testimonial: "The quality of Fonte's products exceeded our expectations. Their designs have added a touch of elegance to our space that we absolutely love."
+  },
+  {
+    name: "Kiran John",
+    location: "Kerala, India",
+    image: "https://ik.imagekit.io/kamil467/Fonte/testimonial_3.jpeg?updatedAt=1736279445015",
+    testimonial: "The quality of Fonte's products exceeded our expectations. Their designs have added a touch of elegance to our space that we absolutely love."
+  }
+];
 
 export default Home;
