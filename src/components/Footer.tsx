@@ -30,7 +30,7 @@ const Footer = () => {
           
           {/* Quick Links */}
           <div className="lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-2 text-[#B49A5E]" >Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-2 text-[#B49A5E] hover:text-[#fff]" >Quick Links</h3>
             <ul className="space-y-1">
               <li><Link to="/" className="text-gray-400 hover:text-[#B49A5E] text-sm">Home</Link></li>
               <li><Link to="/products" className="text-gray-400 hover:text-[#B49A5E] text-sm">Collections</Link></li>
