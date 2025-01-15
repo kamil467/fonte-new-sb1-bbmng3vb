@@ -55,3 +55,21 @@ A single logo image cannot meet all the requirements.
 ### Test Google Map Embed URL:
 
 https://jsfiddle.net/591ks6c0/
+
+
+Improved Data Flow in NavBar
+
+Region Change → 
+  Clear Categories/Subcategories →
+    Fetch Region Mappings →
+      Update Mapping States →
+        Trigger useEffect →
+          Fetch Categories and Subcategories →
+            Update UI
+
+----------------------
+Cache Implementation:
+- Use React Query for caching data
+- Use React Query for caching data
+
+currently disabled due to performance issues, enable for better performance and reduced data fetching. 10 mins cache time.

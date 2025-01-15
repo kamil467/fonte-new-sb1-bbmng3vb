@@ -73,3 +73,34 @@ export interface ProductCareInstruction {
   created_at: string;
   updated_at: string;
 }
+
+export interface Region
+{
+  id: number;
+  name: string;
+  locale:string;
+  created_at: string;
+  code: string;
+}
+export interface RegionCategoryMapping
+{
+  id: number;
+  region_id: number;
+  category_id: number;
+  created_at: string;
+}
+
+export interface RegionProductMapping
+{
+  id: number;
+  region_id: number;
+  product_id: number;
+  created_at: string;
+}
+export interface RegionSubCategoryMapping
+{
+  id: number;
+  region_id: number;
+  subcategory_id: number;
+  created_at: string;
+}
