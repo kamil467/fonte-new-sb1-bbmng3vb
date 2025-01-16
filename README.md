@@ -84,7 +84,7 @@ Header and Footer :
 
   - Global : The map should display all regions.
        use follwoing iframe for global region
-          <iframe src="https://www.google.com/maps/d/embed?mid=1jI4jyGGP315oqtd5wlcO0DZ5orD-j_s&ehbc=2E312F" width="640" height="480"></iframe>
+          <iframe src="https://www.google.com/maps/d/embed?mid=1jI4jyGGP315oqtd5wlcO0DZ5orD-j_s&ehbc=2E312F&noprof=1&&output=embed&iwloc=near&z=4" width="640" height="480"></iframe>
             To hide map user title and profile picture -   Identity the element css style class and apply display none 
   - Region:  map only display the selected region.
 
