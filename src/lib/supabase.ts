@@ -73,6 +73,20 @@ export interface Region
   locale:string;
   created_at: string;
   code: string;
+  image_url_1: string;
+  image_url_2: string;
+  image_url_3: string;
+  image_url_4: string;
+  address_1:string;
+  address_2:string;
+  contact_no_1:string;
+  contact_no_2:string;
+  email_1: string;
+  email_2: string;
+  whatsapp_no:string;
+  city:string;
+  country:string;
+  map_url:string;
 }
 export interface RegionCategoryMapping
 {

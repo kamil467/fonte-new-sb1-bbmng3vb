@@ -111,7 +111,6 @@ const Products = () => {
   };
 
   const organizeFilters = () => {
-    // Get category IDs mapped to this region
     const regionCategoryIds = regionCategoryMappings.map(rcm => rcm.category_id);
     const regionSubCategoryIds = regionSubCategoryMappings.map(rscm => rscm.subcategory_id);
 
@@ -119,11 +118,39 @@ const Products = () => {
     const filteredCategories = categories.filter(cat => regionCategoryIds.includes(cat.id));
     const filteredSubcategories = subcategories.filter(sub => regionSubCategoryIds.includes(sub.id));
 
-    const groups: FilterGroup[] = filteredCategories.map(category => ({
-      name: category.name,
-      isOpen: category.slug === categorySlug,
-      items: filteredSubcategories.filter(sub => sub.category_id === category.id)
-    }));
+    // Create the groups array with the selected category first
+    let orderedCategories = [...filteredCategories];
+    if (categorySlug) {
+      const selectedCategory = filteredCategories.find(cat => cat.slug === categorySlug);
+      if (selectedCategory) {
+        orderedCategories = [
+          selectedCategory,
+          ...filteredCategories.filter(cat => cat.id !== selectedCategory.id)
+        ];
+      }
+    }
+
+    const groups: FilterGroup[] = orderedCategories.map(category => {
+      const categorySubcategories = filteredSubcategories.filter(sub => sub.category_id === category.id);
+      let orderedSubcategories = [...categorySubcategories];
+      
+      // If this is the selected category and we have a selected subcategory, put it first
+      if (category.slug === categorySlug && subcategorySlug) {
+        const selectedSubcategory = categorySubcategories.find(sub => sub.slug === subcategorySlug);
+        if (selectedSubcategory) {
+          orderedSubcategories = [
+            selectedSubcategory,
+            ...categorySubcategories.filter(sub => sub.id !== selectedSubcategory.id)
+          ];
+        }
+      }
+
+      return {
+        name: category.name,
+        isOpen: category.slug === categorySlug,
+        items: orderedSubcategories
+      };
+    });
 
     setFilterGroups(groups);
   };
@@ -216,74 +243,128 @@ const Products = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Filters Sidebar */}
-        <div className="w-full md:w-1/4">
-          <div className="bg-white rounded-lg shadow p-4">
-            {filterGroups.map((group, index) => (
-              <div key={index} className="border-b last:border-b-0">
-                <button
-                  onClick={() => toggleGroup(index)}
-                  className="w-full flex items-center justify-between py-3 text-lg font-medium hover:text-gray-600"
-                >
-                  {group.name}
-                  {group.isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </button>
-                {group.isOpen && (
-                  <div className="pb-3">
-                    {group.items.map((item) => (
-                      <label key={item.id} className="flex items-center py-2">
-                        <input
-                          type="radio"
-                          name="subcategory"
-                          value={item.id}
-                          checked={selectedSubCategory === item.id.toString()}
-                          onChange={() => handleSubCategorySelect(item)}
-                          className="mr-2"
-                        />
-                        <span className="text-sm">{item.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Banner */}
+      <div className="relative h-[50vh] bg-white">
+        <div className="absolute inset-0">
+          <img 
+            src={categories.find(c => c.slug === categorySlug)?.image_url}
+            alt="Products Banner"
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-black/30" /> {/* Overlay for better text visibility */}
         </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+          <h1 className="text-5xl font-light mb-4">{categories.find(c => c.slug === categorySlug)?.name}</h1>
+          <p className="text-lg text-gray-200 max-w-2xl text-center px-4">
+            {categories.find(c => c.slug === categorySlug)?.description}
+          </p>
+        </div>
+      </div>
 
-        {/* Products Grid */}
-        <div className="w-full md:w-3/4">
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-            </div>
-          ) : error ? (
-            <div className="text-red-600 text-center py-8">{error}</div>
-          ) : products.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              No products found for this category
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <div key={product.id} className="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
-                  <img 
-                    src={product.image_url} 
-                    alt={product.name} 
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-lg font-medium">{product.name}</h3>
-                    <p className="text-gray-600 text-sm mt-1">{product.description}</p>
-                    {product.price && (
-                      <p className="text-[#B49A5E] font-medium mt-2">{product.price}</p>
-                    )}
-                  </div>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Filters Sidebar */}
+          <div className="w-full md:w-1/4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 sticky top-24">
+              <div className="p-4 border-b border-gray-100">
+                <h2 className="text-xl font-medium text-gray-900 text-center">Products</h2>
+              </div>
+              {filterGroups.map((group, index) => (
+                <div 
+                  key={index} 
+                  className={`border-b border-gray-100 last:border-b-0 ${
+                    group.isOpen ? 'bg-gray-50' : ''
+                  }`}
+                >
+                  <button
+                    onClick={() => toggleGroup(index)}
+                    className={`w-full flex items-center justify-between p-4 text-base hover:bg-gray-50 transition-colors ${
+                      group.isOpen ? 'text-[#B49A5E] font-medium' : 'text-gray-900'
+                    }`}
+                  >
+                    <span className="font-medium">{group.name}</span>
+                    {group.isOpen ? 
+                      <ChevronUp className={`w-5 h-5 ${group.isOpen ? 'text-[#B49A5E]' : 'text-gray-500'}`} /> : 
+                      <ChevronDown className="w-5 h-5 text-gray-500" />
+                    }
+                  </button>
+                  {group.isOpen && (
+                    <div className="px-4 pb-4">
+                      {group.items.map((item) => (
+                        <label 
+                          key={item.id} 
+                          className={`flex items-center py-2 cursor-pointer group ${
+                            selectedSubCategory === item.id.toString() ? 'bg-[#B49A5E]/10 px-2 rounded' : ''
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="subcategory"
+                            value={item.id}
+                            checked={selectedSubCategory === item.id.toString()}
+                            onChange={() => handleSubCategorySelect(item)}
+                            className="w-4 h-4 text-[#B49A5E] border-gray-300 focus:ring-[#B49A5E]"
+                          />
+                          <span className={`ml-3 text-sm ${
+                            selectedSubCategory === item.id.toString() 
+                              ? 'text-[#B49A5E] font-medium' 
+                              : 'text-gray-700 group-hover:text-gray-900'
+                          }`}>
+                            {item.name}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-          )}
+          </div>
+
+          {/* Products Grid */}
+          <div className="w-full md:w-3/4">
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#B49A5E] border-t-transparent"></div>
+              </div>
+            ) : error ? (
+              <div className="text-red-600 text-center py-8 bg-red-50 rounded-lg">{error}</div>
+            ) : products.length === 0 ? (
+              <div className="text-center py-12 px-4 bg-white rounded-lg border border-gray-100">
+                <p className="text-lg text-gray-600">No products found for this category</p>
+                <p className="text-sm text-gray-500 mt-2">Try selecting a different category or subcategory</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <div key={product.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
+                    <div className="relative aspect-square overflow-hidden bg-gray-100">
+                      <img 
+                        src={product.image_url} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-[#B49A5E] transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm mt-2 line-clamp-2">{product.description}</p>
+                      {product.price && (
+                        <p className="text-[#B49A5E] font-medium mt-4 flex items-center">
+                          <span className="text-sm">Starting from</span>
+                          <span className="text-lg ml-2">{product.price}</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

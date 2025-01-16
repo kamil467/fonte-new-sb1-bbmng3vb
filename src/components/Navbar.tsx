@@ -70,6 +70,9 @@ const Navbar = () => {
     }
   }, [regionCategoryMappings, regionSubCategoryMappings]);
 
+
+
+  
   const handleRegionChange = async () => {
     if (!selectedRegion) return;
     
@@ -321,11 +324,12 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
               <Mail className="w-4 h-4 mr-2" />
-              <span>wecare@sedarglobal.com</span>
+              {selectedRegion && (
+              <span>{selectedRegion.email_1}</span> )}
             </div>
             <div className="flex items-center">
               <Phone className="w-4 h-4 mr-2" />
-              <span>+97444694442</span>
+              <span>{selectedRegion && selectedRegion.contact_no_1}</span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -411,21 +415,18 @@ const Navbar = () => {
               />
             </Link>
 
-            {/* Search Bar */}
-            <div className="hidden md:flex flex-1 max-w-xl mx-8">
+            {/* Search Bar  - commented this feature for now */}
+          {/*}  <div className="hidden md:flex flex-1 max-w-xl mx-8">
               <input
                 type="text"
                 placeholder="Search Product"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-gray-500"
               />
             </div>
-
+           */}
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/virtual-store" className="flex items-center">
-                <span className="mr-2">360°</span>
-                About Us
-              </Link>
+             
               <Link to="/consultation" className="flex items-center">
                 Free Consultation
               </Link>
@@ -435,7 +436,10 @@ const Navbar = () => {
               <Link to="/samples" className="flex items-center">
                 Expertise
               </Link>
-           
+              <Link to="/virtual-store" className="flex items-center">
+                {/*<span className="mr-2">360°</span>*/}
+                About Us
+              </Link>
             </div>
           </div>
 

@@ -16,6 +16,8 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const regionCode = location.pathname.split('/')[1];
+ console.log(regionCode);
   return (
     <div>
       <div className="relative h-[80vh]">
@@ -44,8 +46,8 @@ const Home = () => {
             >
               Elevate Your Space with Premium Fabrics & Design
             </p>
-            <Link 
-              to="/products" 
+          {/*}  <Link 
+              to={`/${regionCode}/products`} 
               className="inline-block bg-[#B49A5E] text-white px-8 py-3 rounded hover:bg-[#776944] transition-colors opacity-0"
               style={{
                 animation: 'fadeInUp 1s ease-out 0.9s forwards',
@@ -54,6 +56,7 @@ const Home = () => {
             >
               Explore Collections
             </Link>
+            */}
           </div>
         </div>
       </div>
