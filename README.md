@@ -83,6 +83,9 @@ Header and Footer :
  Maps:
 
   - Global : The map should display all regions.
+       use follwoing iframe for global region
+          <iframe src="https://www.google.com/maps/d/embed?mid=1jI4jyGGP315oqtd5wlcO0DZ5orD-j_s&ehbc=2E312F" width="640" height="480"></iframe>
+               
   - Region:  map only display the selected region.
 
 
