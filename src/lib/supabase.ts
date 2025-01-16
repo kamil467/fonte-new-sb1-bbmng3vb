@@ -104,3 +104,24 @@ export interface RegionSubCategoryMapping
   subcategory_id: number;
   created_at: string;
 }
+export interface Heroku
+{
+  id: number;
+  region_id: number;
+  created_at: string;
+  image_url_1: string;
+  image_url_2: string;
+  image_url_3: string;
+  image_url_4: string;
+  address_1:string;
+  address_2:string;
+  contact_no_1:string;
+  contact_no_2:string;
+  email_id_1: string;
+  email_id_2: string;
+  whatsapp_no:string;
+  city:string;
+  country:string;
+  map_url:string;
+
+}
