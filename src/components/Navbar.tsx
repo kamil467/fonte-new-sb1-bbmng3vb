@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Mail, Menu, Phone, X, ChevronDown, Loader2 } from 'lucide-react';
+import { Mail, Menu, Phone, X, ChevronDown, Loader2, Globe } from 'lucide-react';
 import { supabase, Category, SubCategory, Region, RegionCategoryMapping, RegionSubCategoryMapping } from '../lib/supabase';
 import { RegionCode, getRegionIdFromCode, getRegionCodeFromId, getRegionFromLocation, updateUrlWithRegion, isValidRegionCode } from '../utils/regionUtils';
 
@@ -15,6 +15,8 @@ const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [openMobileCategories, setOpenMobileCategories] = useState<number[]>([]);
+  const [menuButtonPressed, setMenuButtonPressed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -70,9 +72,6 @@ const Navbar = () => {
     }
   }, [regionCategoryMappings, regionSubCategoryMappings]);
 
-
-
-  
   const handleRegionChange = async () => {
     if (!selectedRegion) return;
     
@@ -253,53 +252,182 @@ const Navbar = () => {
     return subcategories.filter(subcategory => subcategory.category_id === categoryId);
   };
 
+  const toggleMobileCategory = (categoryId: number) => {
+    setOpenMobileCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const handleMenuClick = () => {
+    setMenuButtonPressed(true);
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setTimeout(() => setMenuButtonPressed(false), 200);
+  };
+
   // Mobile Navigation Overlay
   const MobileNav = () => (
-    <div className={`fixed inset-0 bg-white z-50 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
-      <div className="flex justify-between items-center p-4 border-b">
-        <div className="flex items-center">
-          <button onClick={() => setIsMobileMenuOpen(false)} className="p-2">
-            <X className="w-6 h-6" />
-          </button>
-          <span className="ml-4 text-xl">Login & Sign Up</span>
-        </div>
+    <div
+      className={`fixed inset-y-0 left-0 w-[280px] bg-white transform ${
+        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      } transition-transform duration-300 ease-in-out z-50 shadow-xl`}
+    >
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-100">
+        <button 
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="p-2 hover:text-[#B49A5E] transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+        <span className="text-lg font-medium">Fonte</span>
+        <div className="w-9" /> {/* Spacer for alignment */}
       </div>
 
-      <nav className="p-4">
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-2">Products</h2>
-          <ul className="space-y-4">
-            {getMainCategories().map((category) => (
-              <li key={category.id} className="border-b pb-2">
-                <Link 
-                  to={getCategoryUrl(category.slug)}
-                  className="block py-2 text-lg hover:text-gray-600"
-                  onClick={() => setIsMobileMenuOpen(false)}
+      {/* Mobile Navigation Content */}
+      <div className="h-[calc(100vh-64px)] overflow-y-auto">
+        {/* Region Selector */}
+        <div className="border-b border-gray-100">
+          <button
+            onClick={() => setIsRegionDropdownOpen(!isRegionDropdownOpen)}
+            className="flex items-center justify-between w-full p-4 hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center">
+              {selectedRegion?.code === 'IN' && (
+                <img src="/flags/in.svg" alt="India" className="w-5 h-5 mr-2" />
+              )}
+              {selectedRegion?.code === 'AE' && (
+                <img src="/flags/ae.svg" alt="UAE" className="w-5 h-5 mr-2" />
+              )}
+              {selectedRegion?.code === 'OM' && (
+                <img src="/flags/om.svg" alt="Oman" className="w-5 h-5 mr-2" />
+              )}
+              <span className="text-lg font-medium">{selectedRegion?.name || 'Select Region'}</span>
+            </div>
+            <ChevronDown 
+              className={`w-5 h-5 transform transition-transform text-[#B49A5E] ${
+                isRegionDropdownOpen ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+          {isRegionDropdownOpen && (
+            <div className="bg-gray-50 py-2">
+              {regions.map((region) => (
+                <button
+                  key={region.id}
+                  className={`flex items-center w-full px-6 py-2 text-left transition-colors ${
+                    selectedRegion?.id === region.id 
+                      ? 'text-[#B49A5E] bg-[#B49A5E]/10' 
+                      : 'hover:bg-gray-100'
+                  }`}
+                  onClick={() => {
+                    handleRegionSelect(region);
+                    setIsRegionDropdownOpen(false);
+                  }}
                 >
-                  {category.name}
-                </Link>
-                {loading ? (
-                  <div className="pl-4 py-2 text-gray-500">Loading...</div>
-                ) : (
-                  <ul className="pl-4 mt-2 space-y-2">
-                    {getSubCategories(category.id).map((subCategory) => (
-                      <li key={subCategory.id}>
-                        <Link
-                          to={getSubCategoryUrl(category.slug, subCategory.slug)}
-                          className="block py-1 text-gray-600 hover:text-gray-900"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          {subCategory.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-          </ul>
+                  {region.code === 'IN' && (
+                    <img src="/flags/in.svg" alt="India" className="w-5 h-5 mr-2" />
+                  )}
+                  {region.code === 'AE' && (
+                    <img src="/flags/ae.svg" alt="UAE" className="w-5 h-5 mr-2" />
+                  )}
+                  {region.code === 'OM' && (
+                    <img src="/flags/om.svg" alt="Oman" className="w-5 h-5 mr-2" />
+                  )}
+                  {region.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      </nav>
+
+        {/* Categories */}
+        <div className="py-2">
+          {categories.map((category) => {
+            const isOpen = openMobileCategories.includes(category.id);
+            const categorySubcategories = subcategories.filter(
+              sub => sub.category_id === category.id
+            );
+
+            return (
+              <div key={category.id} className="border-b border-gray-100 last:border-b-0">
+                <button
+                  className={`flex items-center justify-between w-full p-4 text-left hover:bg-gray-50 transition-colors ${
+                    isOpen ? 'text-[#B49A5E]' : ''
+                  }`}
+                  onClick={() => toggleMobileCategory(category.id)}
+                >
+                  <span className="text-lg font-medium">{category.name}</span>
+                  <ChevronDown 
+                    className={`w-5 h-5 transform transition-transform text-[#B49A5E] ${
+                      isOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isOpen && (
+                  <div className="bg-gray-50">
+                    {categorySubcategories.map((subcategory) => (
+                      <Link
+                        key={subcategory.id}
+                        to={`/${selectedRegion?.code || ''}/products?category=${category.id}&subcategory=${subcategory.id}`}
+                        className="block px-6 py-3 hover:bg-gray-100 transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {subcategory.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Main Navigation Links */}
+        <div className="border-t border-gray-100">
+          <Link
+            to={`/${selectedRegion?.code || ''}/consultation`}
+            className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span className="text-lg">Free Consultation</span>
+          </Link>
+          <Link
+            to={`/${selectedRegion?.code || ''}/samples`}
+            className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span className="text-lg">Expertise</span>
+          </Link>
+          <Link
+            to={`/${selectedRegion?.code || ''}/virtual-store`}
+            className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span className="text-lg">About Us</span>
+          </Link>
+        </div>
+
+        {/* Contact Information */}
+        <div className="mt-auto border-t border-gray-100 p-4 space-y-3">
+          {selectedRegion && (
+            <>
+              <div className="flex items-center text-gray-600">
+                <Mail className="w-5 h-5 mr-3 text-[#B49A5E]" />
+                <span>{selectedRegion.email_1}</span>
+              </div>
+              {selectedRegion.contact_no_1 && (
+              <div className="flex items-center text-gray-600">
+                <Phone className="w-5 h-5 mr-3 text-[#B49A5E]" />
+                <span>{selectedRegion.contact_no_1}</span>
+              </div>
+              )}
+            </>
+              
+          )}
+        </div>
+      </div>
     </div>
   );
 
@@ -397,7 +525,12 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             {/* Mobile Menu Button */}
-            <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden p-2">
+            <button 
+              onClick={handleMenuClick}
+              className={`md:hidden p-2 transition-colors ${
+                menuButtonPressed ? 'text-[#B49A5E]' : 'text-black hover:text-[#B49A5E]'
+              }`}
+            >
               <Menu className="w-6 h-6" />
             </button>
 
@@ -636,6 +769,12 @@ const Navbar = () => {
       </nav>
 
       <MobileNav />
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
     </header>
   );
 };
