@@ -326,14 +326,14 @@ const Navbar = () => {
                     setIsRegionDropdownOpen(false);
                   }}
                 >
-                  {region.code === 'IN' && (
-                    <img src="/flags/in.svg" alt="India" className="w-5 h-5 mr-2" />
+                  {region.code === 'ind-en' && (
+                    <img src="icons/icons8-india.png" alt="India" className="w-5 h-5 mr-2" />
                   )}
-                  {region.code === 'AE' && (
-                    <img src="/flags/ae.svg" alt="UAE" className="w-5 h-5 mr-2" />
+                  {region.code === 'uae-en' && (
+                    <img src="icons/icons8-uae.png" alt="UAE" className="w-5 h-5 mr-2" />
                   )}
-                  {region.code === 'OM' && (
-                    <img src="/flags/om.svg" alt="Oman" className="w-5 h-5 mr-2" />
+                  {region.code === 'omn' && (
+                    <img src="icons/icons8-oman.png" alt="Oman" className="w-5 h-5 mr-2" />
                   )}
                   {region.name}
                 </button>
@@ -370,7 +370,7 @@ const Navbar = () => {
                     {categorySubcategories.map((subcategory) => (
                       <Link
                         key={subcategory.id}
-                        to={`/${selectedRegion?.code || ''}/products?category=${category.id}&subcategory=${subcategory.id}`}
+                        to={`/${selectedRegion?.code || ''}/products/${category.slug}/${subcategory.slug}`}
                         className="block px-6 py-3 hover:bg-gray-100 transition-colors"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
