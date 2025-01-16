@@ -246,8 +246,8 @@ const Navbar = () => {
     return getMainCategories().slice(6);
   };
 
-  const getSubCategories = (parentId: number) => {
-    return subcategories.filter(category => category.parent_id === parentId);
+  const getSubCategories = (categoryId: number) => {
+    return subcategories.filter(subcategory => subcategory.category_id === categoryId);
   };
 
   // Mobile Navigation Overlay

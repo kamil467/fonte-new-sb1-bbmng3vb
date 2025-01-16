@@ -24,11 +24,12 @@ export interface SubCategory {
   slug: string;
   description?: string;
   image_url?: string;
-  parent_id: number | null;
+  category_id: number | null;
   order: number;
   created_at: string;
   updated_at: string;
   icon_url?: string;
+  parent_id: number | null;
 }
 
 export interface Product {
@@ -36,22 +37,13 @@ export interface Product {
   name: string;
   description: string;
   image_url: string;
-  category_id: number;
-  reference: string;
-  composition: {
-    main: string;
-    embroidery?: string;
-  };
-  technique?: string;
-  width?: string;
-  weight?: string;
-  martindale?: string;
-  repeats?: string;
-  end_use?: string;
-  price?: number;
-  is_featured: boolean;
+  subcategory_id: number;
+  price?: string;
   created_at: string;
   updated_at: string;
+  is_active: boolean;
+  region_code: string;
+  region_product_mappings?: RegionProductMapping[];
 }
 
 export interface ProductColor {

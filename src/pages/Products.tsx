@@ -1,186 +1,290 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { useParams, useLocation } from 'react-router-dom';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { supabase, Category, SubCategory, Product, RegionCategoryMapping, RegionSubCategoryMapping, RegionProductMapping } from '../lib/supabase';
 
-interface Category {
-  id: number;
+interface FilterGroup {
   name: string;
-  slug: string;
-  parent_id: number | null;
-  image_url: string;
-  icon_url: string;
+  isOpen: boolean;
+  items: SubCategory[];
 }
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  image_url: string;
-  category_id: number;
+interface MappedProduct extends Product {
+  region_product_mappings: RegionProductMapping[];
 }
 
-const Products: React.FC = () => {
-  const { categorySlug } = useParams<{ categorySlug: string }>();
+const Products = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [regionCategoryMappings, setRegionCategoryMappings] = useState<RegionCategoryMapping[]>([]);
+  const [regionSubCategoryMappings, setRegionSubCategoryMappings] = useState<RegionSubCategoryMapping[]>([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
+  const [filterGroups, setFilterGroups] = useState<FilterGroup[]>([]);
+  
+  const { categorySlug, subcategorySlug } = useParams();
+  const location = useLocation();
+  const regionCode = location.pathname.split('/')[1];
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    fetchData();
+  }, [regionCode]);
 
   useEffect(() => {
-    if (categorySlug) {
-      const category = categories.find(c => c.slug === categorySlug);
-      if (category) {
-        setSelectedCategory(category);
-        fetchProducts(category.id);
+    if (categories.length > 0 && subcategories.length > 0 && regionCategoryMappings.length > 0 && regionSubCategoryMappings.length > 0) {
+      organizeFilters();
+      
+      if (subcategorySlug) {
+        const subcategory = subcategories.find(s => s.slug === subcategorySlug);
+        if (subcategory) {
+          setSelectedSubCategory(subcategory.id.toString());
+          fetchProductsBySubcategory(subcategory.id);
+        }
+      } else if (categorySlug) {
+        const category = categories.find(c => c.slug === categorySlug);
+        if (category) {
+          fetchProductsByCategory(category.id);
+        }
       }
     }
-  }, [categorySlug, categories]);
+  }, [categories, subcategories, regionCategoryMappings, regionSubCategoryMappings, categorySlug, subcategorySlug]);
 
-  const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name');
-      
-      if (error) throw error;
-      setCategories(data || []);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-      setError('Failed to load categories');
-    }
-  };
-
-  const fetchProducts = async (categoryId: number) => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('category_id', categoryId)
-        .order('created_at', { ascending: false });
+      
+      // Get region ID from code
+      const { data: regionData, error: regionError } = await supabase
+        .from('regions')
+        .select('id')
+        .eq('code', regionCode)
+        .single();
 
-      if (error) throw error;
-      setProducts(data || []);
+      if (regionError) throw regionError;
+      if (!regionData) throw new Error('Region not found');
+      
+      const regionId = regionData.id;
+
+      // Fetch all required data
+      const [
+        categoriesData,
+        subcategoriesData,
+        regionCategoryData,
+        regionSubCategoryData
+      ] = await Promise.all([
+        supabase.from('categories').select('*'),
+        supabase.from('sub_categories').select('*'),
+        supabase.from('region_category_mapping').select('*').eq('region_id', regionId),
+        supabase.from('region_subcategory_mapping').select('*').eq('region_id', regionId)
+      ]);
+
+      if (categoriesData.error) throw categoriesData.error;
+      if (subcategoriesData.error) throw subcategoriesData.error;
+      if (regionCategoryData.error) throw regionCategoryData.error;
+      if (regionSubCategoryData.error) throw regionSubCategoryData.error;
+
+      setCategories(categoriesData.data);
+      setSubcategories(subcategoriesData.data);
+      setRegionCategoryMappings(regionCategoryData.data);
+      setRegionSubCategoryMappings(regionSubCategoryData.data);
+
+      // Fetch initial products if subcategory is specified
+      if (subcategorySlug) {
+        const subcategory = subcategoriesData.data.find(s => s.slug === subcategorySlug);
+        if (subcategory) {
+          await fetchProductsBySubcategory(subcategory.id);
+        }
+      } else if (categorySlug) {
+        const category = categoriesData.data.find(c => c.slug === categorySlug);
+        if (category) {
+          await fetchProductsByCategory(category.id);
+        }
+      }
+
+      setLoading(false);
     } catch (err) {
-      console.error('Error fetching products:', err);
-      setError('Failed to load products');
-    } finally {
+      setError(err.message);
       setLoading(false);
     }
   };
 
-  const getSubCategories = (parentId: number | null) => {
-    return categories.filter(category => category.parent_id === parentId);
+  const organizeFilters = () => {
+    // Get category IDs mapped to this region
+    const regionCategoryIds = regionCategoryMappings.map(rcm => rcm.category_id);
+    const regionSubCategoryIds = regionSubCategoryMappings.map(rscm => rscm.subcategory_id);
+
+    // Filter categories and subcategories based on region mappings
+    const filteredCategories = categories.filter(cat => regionCategoryIds.includes(cat.id));
+    const filteredSubcategories = subcategories.filter(sub => regionSubCategoryIds.includes(sub.id));
+
+    const groups: FilterGroup[] = filteredCategories.map(category => ({
+      name: category.name,
+      isOpen: category.slug === categorySlug,
+      items: filteredSubcategories.filter(sub => sub.category_id === category.id)
+    }));
+
+    setFilterGroups(groups);
   };
 
-  const mainCategories = getSubCategories(null);
+  const toggleGroup = (index: number) => {
+    setFilterGroups(prev => prev.map((group, i) => ({
+      ...group,
+      isOpen: i === index ? !group.isOpen : group.isOpen
+    })));
+  };
+
+  const handleSubCategorySelect = (subcategory: SubCategory) => {
+    setSelectedSubCategory(subcategory.id.toString());
+    fetchProductsBySubcategory(subcategory.id);
+  };
+
+  const fetchProductsByCategory = async (categoryId: number) => {
+    try {
+      // Get region data
+      const regionData = await supabase
+        .from('regions')
+        .select()
+        .eq('code', regionCode)
+        .single();
+
+      if (!regionData.data) {
+        throw new Error('Region not found');
+      }
+
+      // Get all subcategories for this category
+      const { data: categorySubcategories, error: subcategoriesError } = await supabase
+        .from('sub_categories')
+        .select('id')
+        .eq('category_id', categoryId);
+
+      if (subcategoriesError) throw subcategoriesError;
+      if (!categorySubcategories || categorySubcategories.length === 0) {
+        setProducts([]);
+        return;
+      }
+
+      // Get all products that belong to any of these subcategories
+      const subcategoryIds = categorySubcategories.map(sub => sub.id);
+      const { data: products, error: productsError } = await supabase
+        .from('products')
+        .select(`
+          *,
+          region_product_mapping!inner(region_id, product_id)
+        `)
+        .eq('region_product_mapping.region_id', regionData.data.id)
+        .in('subcategory_id', subcategoryIds)
+        .eq('is_active', true);
+
+      if (productsError) throw productsError;
+      setProducts(products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setError(error instanceof Error ? error.message : 'An error occurred');
+    }
+  };
+
+  const fetchProductsBySubcategory = async (subcategoryId: number) => {
+    try {
+      const regionData = await supabase
+        .from('regions')
+        .select()
+        .eq('code', regionCode)
+        .single();
+
+      if (!regionData.data) {
+        throw new Error('Region not found');
+      }
+
+      const { data: products, error: productsError } = await supabase
+        .from('products')
+        .select(`
+          *,
+          region_product_mapping!inner(region_id, product_id)
+        `)
+        .eq('region_product_mapping.region_id', regionData.data.id)
+        .eq('subcategory_id', subcategoryId)
+        .eq('is_active', true);
+
+      if (productsError) throw productsError;
+      setProducts(products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setError(error instanceof Error ? error.message : 'An error occurred');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header Section */}
-      <div className="relative h-[40vh] bg-gray-100">
-        <div className="absolute inset-0">
-          <img 
-            src={selectedCategory?.image_url || "https://example.com/default-banner.jpg"}
-            alt={selectedCategory?.name || "Products"}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-5xl font-bold text-white">
-            {selectedCategory?.name || "Our Products"}
-          </h1>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        {/* Categories Grid */}
-        {!selectedCategory && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {mainCategories.map((category) => (
-              <Link
-                key={category.id}
-                to={`/products/${category.slug}`}
-                className="group relative overflow-hidden rounded-lg shadow-lg"
-              >
-                <div className="aspect-w-16 aspect-h-9">
-                  <img
-                    src={category.image_url || "https://example.com/default.jpg"}
-                    alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-xl font-semibold text-white">{category.name}</h3>
-                </div>
-              </Link>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Filters Sidebar */}
+        <div className="w-full md:w-1/4">
+          <div className="bg-white rounded-lg shadow p-4">
+            {filterGroups.map((group, index) => (
+              <div key={index} className="border-b last:border-b-0">
+                <button
+                  onClick={() => toggleGroup(index)}
+                  className="w-full flex items-center justify-between py-3 text-lg font-medium hover:text-gray-600"
+                >
+                  {group.name}
+                  {group.isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </button>
+                {group.isOpen && (
+                  <div className="pb-3">
+                    {group.items.map((item) => (
+                      <label key={item.id} className="flex items-center py-2">
+                        <input
+                          type="radio"
+                          name="subcategory"
+                          value={item.id}
+                          checked={selectedSubCategory === item.id.toString()}
+                          onChange={() => handleSubCategorySelect(item)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">{item.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
-        )}
+        </div>
 
         {/* Products Grid */}
-        {selectedCategory && (
-          <>
-            {/* Subcategories */}
-            <div className="mb-8">
-              <div className="flex flex-wrap gap-4">
-                {getSubCategories(selectedCategory.id).map((subCategory) => (
-                  <Link
-                    key={subCategory.id}
-                    to={`/products/${subCategory.slug}`}
-                    className="px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100"
-                  >
-                    {subCategory.name}
-                  </Link>
-                ))}
-              </div>
+        <div className="w-full md:w-3/4">
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
             </div>
-
-            {/* Products */}
-            {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-              </div>
-            ) : error ? (
-              <div className="text-red-600 text-center py-8">{error}</div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {products.map((product) => (
-                  <Link
-                    key={product.id}
-                    to={`/product/${product.id}`}
-                    className="group"
-                  >
-                    <div className="relative overflow-hidden rounded-lg">
-                      <img
-                        src={product.image_url}
-                        alt={product.name}
-                        className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                      />
-                    </div>
-                    <div className="mt-4">
-                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-gray-600">
-                        {product.name}
-                      </h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {product.description}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </>
-        )}
+          ) : error ? (
+            <div className="text-red-600 text-center py-8">{error}</div>
+          ) : products.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              No products found for this category
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <div key={product.id} className="bg-white rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+                  <img 
+                    src={product.image_url} 
+                    alt={product.name} 
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-medium">{product.name}</h3>
+                    <p className="text-gray-600 text-sm mt-1">{product.description}</p>
+                    {product.price && (
+                      <p className="text-[#B49A5E] font-medium mt-2">{product.price}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
