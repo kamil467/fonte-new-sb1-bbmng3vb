@@ -294,14 +294,17 @@ const Navbar = () => {
             className="flex items-center justify-between w-full p-4 hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center">
-              {selectedRegion?.code === 'IN' && (
-                <img src="/flags/in.svg" alt="India" className="w-5 h-5 mr-2" />
+              {selectedRegion?.code === 'ind-en' && (
+                <img src="icons/icons8-india.png" alt="India" className="w-5 h-5 mr-2" />
               )}
-              {selectedRegion?.code === 'AE' && (
-                <img src="/flags/ae.svg" alt="UAE" className="w-5 h-5 mr-2" />
+              {selectedRegion?.code === 'uae-en' && (
+                <img src="icons/icons8-uae.png" alt="UAE" className="w-5 h-5 mr-2" />
               )}
-              {selectedRegion?.code === 'OM' && (
-                <img src="/flags/om.svg" alt="Oman" className="w-5 h-5 mr-2" />
+              {selectedRegion?.code === 'omn-en' && (
+                <img src="icons/icons8-oman.png" alt="Oman" className="w-5 h-5 mr-2" />
+              )}
+              {selectedRegion?.code === 'global-en' && (
+                <img src="icons/icons8-global.png" alt="Global" className="w-5 h-5 mr-2" />
               )}
               <span className="text-lg font-medium">{selectedRegion?.name || 'Select Region'}</span>
             </div>
@@ -332,8 +335,11 @@ const Navbar = () => {
                   {region.code === 'uae-en' && (
                     <img src="icons/icons8-uae.png" alt="UAE" className="w-5 h-5 mr-2" />
                   )}
-                  {region.code === 'omn' && (
+                  {region.code === 'omn-en' && (
                     <img src="icons/icons8-oman.png" alt="Oman" className="w-5 h-5 mr-2" />
+                  )}
+                    {region.code === 'global-en' && (
+                    <img src="icons/icons8-global.png" alt="Global" className="w-5 h-5 mr-2" />
                   )}
                   {region.name}
                 </button>

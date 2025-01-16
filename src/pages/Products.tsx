@@ -266,9 +266,9 @@ const Products = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="w-full md:w-1/4">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 sticky top-24">
+          {/* Filters Sidebar - only visible on desktop */}
+          <div className="hidden md:block w-1/4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 sticky top-24"> 
               <div className="p-4 border-b border-gray-100">
                 <h2 className="text-xl font-medium text-gray-900 text-center">Products</h2>
               </div>
@@ -280,30 +280,21 @@ const Products = () => {
                   }`}
                 >
                   <button
-                    onClick={() => toggleGroup(index)}
                     className={`w-full flex items-center justify-between p-4 text-base hover:bg-gray-50 transition-colors ${
                       group.isOpen ? 'text-[#B49A5E] font-medium' : 'text-gray-900'
                     }`}
+                    onClick={() => toggleGroup(index)}
                   >
                     <span className="font-medium">{group.name}</span>
-                    {group.isOpen ? 
-                      <ChevronUp className={`w-5 h-5 ${group.isOpen ? 'text-[#B49A5E]' : 'text-gray-500'}`} /> : 
-                      <ChevronDown className="w-5 h-5 text-gray-500" />
-                    }
+                    {group.isOpen ? <ChevronUp /> : <ChevronDown />}
                   </button>
                   {group.isOpen && (
                     <div className="px-4 pb-4">
-                      {group.items.map((item) => (
-                        <label 
-                          key={item.id} 
-                          className={`flex items-center py-2 cursor-pointer group ${
-                            selectedSubCategory === item.id.toString() ? 'bg-[#B49A5E]/10 px-2 rounded' : ''
-                          }`}
-                        >
+                      {group.items.map(item => (
+                        <label key={item.id} className="block">
                           <input
                             type="radio"
                             name="subcategory"
-                            value={item.id}
                             checked={selectedSubCategory === item.id.toString()}
                             onChange={() => handleSubCategorySelect(item)}
                             className="w-4 h-4 text-[#B49A5E] border-gray-300 focus:ring-[#B49A5E]"
@@ -311,10 +302,8 @@ const Products = () => {
                           <span className={`ml-3 text-sm ${
                             selectedSubCategory === item.id.toString() 
                               ? 'text-[#B49A5E] font-medium' 
-                              : 'text-gray-700 group-hover:text-gray-900'
-                          }`}>
-                            {item.name}
-                          </span>
+                              : 'text-gray-700'
+                          }`}>{item.name}</span>
                         </label>
                       ))}
                     </div>
