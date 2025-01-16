@@ -88,7 +88,17 @@ Header and Footer :
             To hide map user title and profile picture -   Identity the element css style class and apply display none 
   - Region:  map only display the selected region.
 
+#
+region feature:
+Implement the following features:
+-  fetch the region code from url parameter if available and set the selected region accordingly.
+code are global-en, uae-en, oman-en, india-en
 
+- If region code available in url then fetch user location from browser.
+- if their matches (india, Oma or UAE) then set selected region accordingly and update the URL and call the supbase function to fetch region mappings.
+- If region code available in url but not matches (india, Oma or UAE) then set selected region to global and update the URL and call the supbase function to fetch region mappings.
+-  deciding the region should be done before the component mounts.
+- All urls in the website should have region code in the url.
 
 
 

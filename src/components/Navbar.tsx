@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Mail, Menu, Phone, X, ChevronDown, Loader2 } from 'lucide-react';
 import { supabase, Category, SubCategory, Region, RegionCategoryMapping, RegionSubCategoryMapping } from '../lib/supabase';
+import { RegionCode, getRegionIdFromCode, getRegionCodeFromId, getRegionFromLocation, updateUrlWithRegion, isValidRegionCode } from '../utils/regionUtils';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -14,16 +15,54 @@ const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  // First fetch regions
   useEffect(() => {
     fetchRegions();
   }, []);
 
+  // Then initialize region based on URL or location
+  useEffect(() => {
+    const initializeRegion = async () => {
+      if (!regions.length) return;
+
+      const pathParts = location.pathname.split('/');
+      const urlRegionCode = pathParts[1];
+
+      if (urlRegionCode && isValidRegionCode(urlRegionCode)) {
+        // Valid region code in URL - use it
+        const regionId = getRegionIdFromCode(urlRegionCode);
+        const region = regions.find(r => r.id === regionId);
+        if (region) {
+          setSelectedRegion(region);
+        }
+      } else {
+        // No valid region code in URL - detect from location
+        const userRegion = await getRegionFromLocation();
+        const regionId = getRegionIdFromCode(userRegion);
+        const region = regions.find(r => r.id === regionId);
+        if (region) {
+          setSelectedRegion(region);
+          updateUrlWithRegion(userRegion);
+        }
+      }
+    };
+
+    initializeRegion();
+  }, [regions, location.pathname]);
+
+  // Finally fetch categories and subcategories when region changes
   useEffect(() => {
     if (selectedRegion) {
       handleRegionChange();
     }
   }, [selectedRegion]);
+
+  useEffect(() => {
+    fetchRegions();
+  }, []);
 
   useEffect(() => {
     if (regionCategoryMappings.length > 0 || regionSubCategoryMappings.length > 0) {
@@ -47,6 +86,31 @@ const Navbar = () => {
       console.error('Error during region change:', err);
       setLoading(false);
     }
+  };
+
+  const handleRegionSelect = async (region: Region) => {
+    setSelectedRegion(region);
+    setIsRegionDropdownOpen(false);
+    navigate(`/${region.code}`);
+  };
+
+  const getRegionFromUrl = (): RegionCode => {
+    const pathParts = location.pathname.split('/');
+    const urlRegionCode = pathParts[1];
+    if (urlRegionCode && isValidRegionCode(urlRegionCode)) {
+      return urlRegionCode;
+    }
+    return selectedRegion?.code as RegionCode || 'global-en';
+  };
+
+  const getCategoryUrl = (categorySlug: string) => {
+    const regionCode = selectedRegion?.code || getRegionFromUrl();
+    return `/${regionCode}/products/${categorySlug}`;
+  };
+
+  const getSubCategoryUrl = (categorySlug: string, subCategorySlug: string) => {
+    const regionCode = selectedRegion?.code || getRegionFromUrl();
+    return `/${regionCode}/products/${categorySlug}/${subCategorySlug}`;
   };
 
   const fetchCategoriesAndSubcategories = async () => {
@@ -114,15 +178,13 @@ const Navbar = () => {
     }
   };
 
-const fetchRegionIcon = (id:number) =>{
+  const fetchRegionIcon = (id:number) =>{
    return id == 1 ? "icons/icons8-global.png" : 
     id == 2 ? "icons/icons8-uae.png" : 
     id == 3 ? "icons/icons8-oman.png":
     id == 4 ? "icons/icons8-india.png": "icons/icons8-global.png"
      
-}
-
-
+  }
 
   const fetchCategories = async () => {
     if (!selectedRegion || !regionCategoryMappings.length) {
@@ -207,7 +269,7 @@ const fetchRegionIcon = (id:number) =>{
             {getMainCategories().map((category) => (
               <li key={category.id} className="border-b pb-2">
                 <Link 
-                  to={`/products/${category.slug}`}
+                  to={getCategoryUrl(category.slug)}
                   className="block py-2 text-lg hover:text-gray-600"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -220,7 +282,7 @@ const fetchRegionIcon = (id:number) =>{
                     {getSubCategories(category.id).map((subCategory) => (
                       <li key={subCategory.id}>
                         <Link
-                          to={`/products/${category.slug}/${subCategory.slug}`}
+                          to={getSubCategoryUrl(category.slug, subCategory.slug)}
                           className="block py-1 text-gray-600 hover:text-gray-900"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
@@ -243,14 +305,14 @@ const fetchRegionIcon = (id:number) =>{
       {/* Error Banner */}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 relative" role="alert">
-          <span className="block sm:inline">{error}</span>
-          <button 
-            className="absolute top-0 bottom-0 right-0 px-4 py-3"
-            onClick={() => setError(null)}
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+        <span className="block sm:inline">{error}</span>
+        <button 
+          className="absolute top-0 bottom-0 right-0 px-4 py-3"
+          onClick={() => setError(null)}
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
       )}
 
       {/* Top Bar */}
@@ -282,7 +344,7 @@ const fetchRegionIcon = (id:number) =>{
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                       <>
-                       <img 
+                        <img 
                               src={fetchRegionIcon(selectedRegion.id)}
                               alt={selectedRegion.name} width={48}
                               className="w-6 h-4" 
@@ -300,10 +362,7 @@ const fetchRegionIcon = (id:number) =>{
                     {regions.map((region) => (
                       <button
                         key={region.id}
-                        onClick={() => {
-                          setSelectedRegion(region);
-                          setIsRegionDropdownOpen(false);
-                        }}
+                        onClick={() => handleRegionSelect(region)}
                         className="flex items-center space-x-3 w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
                         {
@@ -383,12 +442,11 @@ const fetchRegionIcon = (id:number) =>{
           {/* Desktop Categories Menu */}
           {!loading ? (
             <div className="hidden md:flex justify-between items-center py-4 border-t">
-              {getVisibleCategories().map((category,index:number) => (
+              {getVisibleCategories().map((category) => (
                 <div key={category.id} className="group relative">
                   <Link 
-                    to={`/products/${category.slug}`}
-                    className={`text-sm font-medium hover:text-gray-600  hover:border-b-2 hover:border-[#B49A5E] whitespace-nowrap px-4 py-2 
-                    `}
+                    to={getCategoryUrl(category.slug)}
+                    className={`text-sm font-medium hover:text-gray-600 hover:border-b-2 hover:border-[#B49A5E] whitespace-nowrap px-4 py-2`}
                   >
                     {category.name}
                   </Link>
@@ -400,21 +458,21 @@ const fetchRegionIcon = (id:number) =>{
                             <h2 className="text-3xl font-light">{category.name}</h2>
                             <div className="mt-4">
                               <Link
-                                to={`/products/${category.slug}`}
+                                to={getCategoryUrl(category.slug)}
                                 className="text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B] transition-colors inline-flex items-center"
                               >
                                 Shop All
                                 <svg className="w-4 h-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10 10.586l3.293-3.293a1 1 0 011.414-1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                                 </svg>
                               </Link>
                             </div>
                           </div>
-                          <div className="flex-1 grid grid-cols-3 gap-x-12 gap-y-4 px-8">
+                          <div className="flex-1 grid grid-cols-3 gap-x-12 gap-y-4 px-8 ">
                             {getSubCategories(category.id).map((subCategory) => (
                               <Link
                                 key={subCategory.id}
-                                to={`/products/${category.slug}/${subCategory.slug}`}
+                                to={getSubCategoryUrl(category.slug, subCategory.slug)}
                                 className="flex items-center space-x-3 py-1 group/item"
                               >
                                 {subCategory.icon_url && (
@@ -469,7 +527,7 @@ const fetchRegionIcon = (id:number) =>{
                         {getMoreCategories().map((category) => (
                           <div key={category.id} className="group/category relative">
                             <Link 
-                              to={`/products/${category.slug}`}
+                              to={getCategoryUrl(category.slug)}
                               className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                             >
                               {category.name}
@@ -485,7 +543,7 @@ const fetchRegionIcon = (id:number) =>{
                                   {getSubCategories(category.id).map((subCategory) => (
                                     <Link
                                       key={subCategory.id}
-                                      to={`/products/${category.slug}/${subCategory.slug}`}
+                                      to={getSubCategoryUrl(category.slug, subCategory.slug)}
                                       className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                     >
                                       {subCategory.icon_url && (
@@ -500,7 +558,7 @@ const fetchRegionIcon = (id:number) =>{
                                   ))}
                                   <div className="border-t my-2"></div>
                                   <Link
-                                    to={`/products/${category.slug}`}
+                                    to={getCategoryUrl(category.slug)}
                                     className="flex items-center px-4 py-2 text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B]"
                                   >
                                     Shop All

@@ -8,29 +8,29 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Description */}
           <div className="lg:col-span-2">
-          <img 
+            <img 
               src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
               alt="Fonte" 
               className="h-12 mb-2"
             />
-            <p className="text-gray-400 text-sm">
-              Luxury furnishing solutions for discerning clients..
-              <br></br>
-              <br></br>
-              <div className="flex items-center">
-              <Mail size={14} className="mr-1 text-[#B49A5E]" />
-              <a className="text-gray-400" href="mailto:info@fonteid.com">info@fonteid.com</a>
+            <div className="text-gray-400 text-sm">
+              <p>Luxury furnishing solutions for discerning clients..</p>
+              <div className="mt-4">
+                <div className="flex items-center">
+                  <Mail size={14} className="mr-1 text-[#B49A5E]" />
+                  <a className="text-gray-400" href="mailto:info@fonteid.com">info@fonteid.com</a>
+                </div>
+                <div className="flex items-center">
+                  <Mail size={14} className="mr-1 text-[#B49A5E]" />
+                  <a className="text-gray-400" href="mailto:fontetrade@gmail.com">fontetrade@gmail.com</a>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center">
-              <Mail size={14} className="mr-1 text-[#B49A5E]" />
-              <a className="text-gray-400" href="mailto:fontetrade@gmail.com">fontetrade@gmail.com</a>
-            </div>
-            </p>
           </div>
           
           {/* Quick Links */}
           <div className="lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-2 text-[#B49A5E] hover:text-[#fff]" >Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-2 text-[#B49A5E] hover:text-[#fff]">Quick Links</h3>
             <ul className="space-y-1">
               <li><Link to="/" className="text-gray-400 hover:text-[#B49A5E] text-sm">Home</Link></li>
               <li><Link to="/products" className="text-gray-400 hover:text-[#B49A5E] text-sm">Collections</Link></li>
@@ -57,14 +57,12 @@ const Footer = () => {
                     <Phone size={14} className="mr-1 text-[#B49A5E]" />
                     <span>+971 55654260</span>
                   </div>
-                  
                 </div>
               </div>
-             
             </div>
           </div>
 
-          {/* Sharjah Location */}
+          {/* Muscat Location */}
           <div className="lg:col-span-2">
             <div className="flex items-start space-x-2">
               <MapPin size={16} className="text-[#B49A5E] mt-1 flex-shrink-0" />
