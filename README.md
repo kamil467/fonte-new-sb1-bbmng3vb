@@ -73,3 +73,20 @@ Cache Implementation:
 - Use React Query for caching data
 
 currently disabled due to performance issues, enable for better performance and reduced data fetching. 10 mins cache time.
+
+#
+
+Header and Footer :
+  - Pass data from header to footer.
+  - When user changes the region on top , the footer should display the content specific to the region. (map, addressm, links, contact details)
+
+ Maps:
+
+  - Global : The map should display all regions.
+  - Region:  map only display the selected region.
+
+
+
+
+
+
