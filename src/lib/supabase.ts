@@ -87,6 +87,7 @@ export interface Region
   city:string;
   country:string;
   map_url:string;
+  icon_url: string;
 }
 export interface RegionCategoryMapping
 {

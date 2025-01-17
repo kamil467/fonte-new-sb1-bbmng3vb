@@ -294,18 +294,9 @@ const Navbar = () => {
             className="flex items-center justify-between w-full p-4 hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center">
-              {selectedRegion?.code === 'ind-en' && (
-                <img src="icons/icons8-india.png" alt="India" className="w-5 h-5 mr-2" />
-              )}
-              {selectedRegion?.code === 'uae-en' && (
-                <img src="icons/icons8-uae.png" alt="UAE" className="w-5 h-5 mr-2" />
-              )}
-              {selectedRegion?.code === 'omn-en' && (
-                <img src="icons/icons8-oman.png" alt="Oman" className="w-5 h-5 mr-2" />
-              )}
-              {selectedRegion?.code === 'global-en' && (
-                <img src="icons/icons8-global.png" alt="Global" className="w-5 h-5 mr-2" />
-              )}
+             
+                <img src={selectedRegion?.icon_url} alt="Global" className="w-5 h-5 mr-2" />
+              
               <span className="text-lg font-medium">{selectedRegion?.name || 'Select Region'}</span>
             </div>
             <ChevronDown 
@@ -329,18 +320,9 @@ const Navbar = () => {
                     setIsRegionDropdownOpen(false);
                   }}
                 >
-                  {region.code === 'ind-en' && (
-                    <img src="icons/icons8-india.png" alt="India" className="w-5 h-5 mr-2" />
-                  )}
-                  {region.code === 'uae-en' && (
-                    <img src="icons/icons8-uae.png" alt="UAE" className="w-5 h-5 mr-2" />
-                  )}
-                  {region.code === 'omn-en' && (
-                    <img src="icons/icons8-oman.png" alt="Oman" className="w-5 h-5 mr-2" />
-                  )}
-                    {region.code === 'global-en' && (
-                    <img src="icons/icons8-global.png" alt="Global" className="w-5 h-5 mr-2" />
-                  )}
+                 
+                    <img src={region.icon_url} alt="Global" className="w-5 h-5 mr-2" />
+                
                   {region.name}
                 </button>
               ))}
@@ -456,15 +438,18 @@ const Navbar = () => {
       <div className="bg-black text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
+          {selectedRegion && selectedRegion.email_1 && (
             <div className="flex items-center">
               <Mail className="w-4 h-4 mr-2" />
-              {selectedRegion && (
-              <span>{selectedRegion.email_1}</span> )}
-            </div>
+           
+              <span>{selectedRegion.email_1}</span> 
+            </div> )}
+            {selectedRegion && selectedRegion.contact_no_1 && (
             <div className="flex items-center">
               <Phone className="w-4 h-4 mr-2" />
-              <span>{selectedRegion && selectedRegion.contact_no_1}</span>
+              <span> {selectedRegion.contact_no_1}</span>
             </div>
+                )}
           </div>
           <div className="flex items-center space-x-4">
             {/* Region Selector */}
@@ -483,9 +468,9 @@ const Navbar = () => {
                     ) : (
                       <>
                         <img 
-                              src={fetchRegionIcon(selectedRegion.id)}
+                              src={selectedRegion.icon_url}
                               alt={selectedRegion.name} width={48}
-                              className="w-6 h-4" 
+                              className="w-4 h-4" 
                             />
                         <span>{selectedRegion.name}</span>
                         <ChevronDown className="w-4 h-4" />
@@ -505,7 +490,7 @@ const Navbar = () => {
                       >
                         {
                           <img 
-                          src={fetchRegionIcon(region.id)}
+                          src={region.icon_url}
                          alt={region.name} 
                          className="w-6 h-4" 
                        />
