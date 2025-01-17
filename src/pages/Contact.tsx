@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { GoogleMap } from '@react-google-maps/api';
 
 interface FormData {
   name: string;
   phone: string;
   email: string;
   message: string;
+  is_ok_receive_communication: boolean;
+  region_code: string;
+  dialCode: string
 }
 
 interface ModalProps {
@@ -15,6 +19,11 @@ interface ModalProps {
   message: string;
   isError?: boolean;
 }
+
+const regionCode = location.pathname.split('/')[1];
+const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
+const omanMap = "https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near";
+const indiaMap= "https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near";
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, isError = false }) => {
   if (!isOpen) return null;
@@ -48,6 +57,9 @@ const Contact = () => {
     phone: '',
     email: '',
     message: '',
+    region_code: '',
+    is_ok_receive_communication: false,
+    dialCode: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalState, setModalState] = useState({
@@ -66,14 +78,53 @@ const Contact = () => {
     }));
   };
 
+  const handleRegionChange = (regionCode: string) => {
+    let dialCode = '';
+    switch (regionCode) {
+      case 'uae-en':
+        dialCode = '+971';
+        break;
+      case 'ind-en':
+        dialCode = '+91';
+        break;
+      case 'omn-en':
+        dialCode = '+968';
+        break;
+      default:
+        dialCode = '';
+    }
+    setFormData(prev => ({ ...prev, dialCode: dialCode }));
+  };
+
+  useEffect(() => {
+    const updateRegionCode = () => {
+      const regionCode = window.location.pathname.split('/')[1];
+      setFormData(prev => ({ ...prev, region_code: regionCode }));
+  
+      handleRegionChange(regionCode); // Call your existing function to handle dial code
+    };
+
+    updateRegionCode(); // Initial call
+
+    // Listen for changes in the URL
+    window.addEventListener('popstate', updateRegionCode);
+    
+    return () => {
+      window.removeEventListener('popstate', updateRegionCode);
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+   
+    const { dialCode, ...formDataForSubmision }  = formData;
+    
+    
     try {
       const { error } = await supabase
         .from('contactus_response')
-        .insert([formData]);
+        .insert([formDataForSubmision]);
 
       if (error) throw error;
 
@@ -89,6 +140,9 @@ const Contact = () => {
         phone: '',
         email: '',
         message: '',
+        region_code: regionCode,
+        is_ok_receive_communication: false,
+        dialCode: dialCode
       });
 
     } catch (error) {
@@ -166,15 +220,18 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone<span className="text-red-500">*</span></label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
-                  />
+                  <label className="block text-sm font-medium text-gray-700">Phone</label>
+                  <div className="flex items-center">
+                    {formData.region_code != 'global-en' && <span className="mr-2 text-gray-600">{formData.dialCode}</span>}
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone.replace(/^[^0-9]+/, '')}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message<span className="text-red-500">*</span></label>
@@ -186,6 +243,18 @@ const Contact = () => {
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
                   />
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    checked={formData.is_ok_receive_communication}
+                    onChange={(e) => 
+                      setFormData({ ...formData, 
+                        is_ok_receive_communication: e.target.checked
+                         
+                         })}
+                  />
+                  <label className="ml-2 text-sm">I agree to receive marketing communications from Fonte</label>
                 </div>
                 <button
                   type="submit"
@@ -200,6 +269,12 @@ const Contact = () => {
             </div>
            
           </div>
+
+    
+        {regionCode === 'uae-en' ? (<GoogleMap mapUrl={uaeMap} />)
+        : regionCode === 'omn-en' ? (<GoogleMap mapUrl={omanMap} />)
+        : regionCode === 'ind-en' ? (<GoogleMap mapUrl={indiaMap} />)
+        :regionCode === 'global-en' && (
           <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-6">Our Locations</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-x-auto">
@@ -255,10 +330,14 @@ const Contact = () => {
                   className="rounded-lg"
                 />
               </div>
+          
             </div>
+          
           </div>
         </div>
-        </div>
+        )}
+        </div> 
+
       </div>
 
       <Modal

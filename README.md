@@ -87,7 +87,7 @@ Header and Footer :
           <iframe src="https://www.google.com/maps/d/embed?mid=1jI4jyGGP315oqtd5wlcO0DZ5orD-j_s&ehbc=2E312F&noprof=1&&output=embed&iwloc=near&z=4" width="640" height="480"></iframe>
             To hide map user title and profile picture -   Identity the element css style class and apply display none 
   - Region:  map only display the selected region.
-
+i4ewOd-pzNkMb-haAclf QUIbkc
 #
 region feature:
 Implement the following features:
@@ -100,6 +100,8 @@ code are global-en, uae-en, oman-en, india-en
 -  deciding the region should be done before the component mounts.
 - All urls in the website should have region code in the url.
 
+
+class="fixed left-0 right-0 mt-2 bg-white border-y shadow-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
 
 
 

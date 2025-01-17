@@ -399,11 +399,18 @@ const Navbar = () => {
             <span className="text-lg">Expertise</span>
           </Link>
           <Link
-            to={`/${selectedRegion?.code || ''}/virtual-store`}
+            to={`/${selectedRegion?.code || ''}/About`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <span className="text-lg">About Us</span>
+          </Link>
+          <Link
+            to={`/${selectedRegion?.code || ''}/contact`}
+            className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span className="text-lg">Contact</span>
           </Link>
         </div>
 
@@ -561,18 +568,23 @@ const Navbar = () => {
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
              
-              <Link to="/consultation" className="flex items-center">
+              <Link to="/consultation" className="flex items-center  hover:text-[#B49A5E]">
                 Free Consultation
               </Link>
-              <Link to="/tools" className="flex items-center">
+              <Link to="/tools" className="flex items-center  hover:text-[#B49A5E]">
                 Tools & Guides
               </Link>
-              <Link to="/samples" className="flex items-center">
+              <Link to="/samples" className="flex items-center  hover:text-[#B49A5E]">
                 Expertise
               </Link>
-              <Link to="/virtual-store" className="flex items-center">
+              <Link to={`/${selectedRegion?.code || ''}/about`} className="flex items-center  hover:text-[#B49A5E]">
                 {/*<span className="mr-2">360°</span>*/}
                 About Us
+              </Link>
+
+              <Link to={`/${selectedRegion?.code || ''}/contact`} className="flex items-center  hover:text-[#B49A5E]">
+                {/*<span className="mr-2">360°</span>*/}
+               Contact
               </Link>
             </div>
           </div>
