@@ -17,6 +17,10 @@ const Home = () => {
   }, []);
 
   const regionCode = location.pathname.split('/')[1];
+  const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
+  const omanMap = "https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near";
+  const indiaMap= "https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near";
+
  console.log(regionCode);
   return (
     <div>
@@ -326,7 +330,70 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <GoogleMap />
+
+      {regionCode === 'uae-en' && <GoogleMap mapUrl={uaeMap} />}
+      {regionCode === 'omn-en' && <GoogleMap mapUrl={omanMap} />}
+      {regionCode === 'ind-en' && <GoogleMap mapUrl={indiaMap} />}
+      {regionCode === 'global-en' && (
+        <div className="mt-12">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-x-auto">
+            {/* Dubai Location */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-[#B49A5E]">UAE Office</h3>
+              <div className="h-[300px] w-full">
+                <iframe
+                  src="https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Fonte Dubai Location"
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+
+            {/* Oman Location */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-[#B49A5E]">Oman Office</h3>
+              <div className="h-[300px] w-full">
+                <iframe
+                  src="https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Fonte Oman Location"
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+
+            {/* India Location */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-[#B49A5E]">India Office</h3>
+              <div className="h-[300px] w-full">
+                <iframe
+                  src="https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Fonte India Location"
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

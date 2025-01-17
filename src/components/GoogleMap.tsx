@@ -1,20 +1,20 @@
 import React from 'react';
 
-const GoogleMap = () => {
+const GoogleMap = ({ mapUrl }: { mapUrl: string }) => {
   return (
     <div className="w-full h-[400px] relative">
-    <iframe 
-    src="https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near" 
-     width="100%"
+      <iframe 
+        src={mapUrl} 
+        width="100%"
         height="100%"
-    style={{ border:0 }} 
-    allowFullScreen= { true }
-    loading="lazy" 
-    referrerPolicy="no-referrer-when-downgrade"
-    title="FONTE GENERAL TRADING LLC" 
-    aria-label ="FONTE GENERAL TRADING LLC"
-    className="absolute inset-0"
-   />
+        style={{ border:0 }} 
+        allowFullScreen= { true }
+        loading="lazy" 
+        referrerPolicy="no-referrer-when-downgrade"
+        title="FONTE GENERAL TRADING LLC" 
+        aria-label ="FONTE GENERAL TRADING LLC"
+        className="absolute inset-0"
+      />
     </div>
   );
 };
@@ -34,8 +34,3 @@ export default GoogleMap;
         title="Fonte Showroom Location"
         className="absolute inset-0"
       /> */}
-
-
-
-
-
