@@ -281,7 +281,17 @@ const Navbar = () => {
         >
           <X className="w-5 h-5" />
         </button>
-        <span className="text-lg font-medium">Fonte</span>
+      
+        <img 
+                src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
+                alt="Fonte" 
+                className="h-12" 
+              />
+              <img 
+                src="https://ik.imagekit.io/kamil467/Fonte/logo_text.png?updatedAt=1736279445015" 
+                alt="Fonte" 
+                className="h-12" 
+              />
         <div className="w-9" /> {/* Spacer for alignment */}
       </div>
 
