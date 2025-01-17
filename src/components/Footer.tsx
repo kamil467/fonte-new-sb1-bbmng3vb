@@ -35,7 +35,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-black text-white">
-      <div className="container mx-auto px-4 py-8 ">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Description */}
           <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -45,37 +45,43 @@ const Footer = () => {
               className="h-12 mb-2"
             />
             <div className="text-gray-400 text-sm">
-              <p className="text-center lg:text-left">Luxury furnishing solutions for discerning clients..</p>
+              <p>Luxury furnishing solutions for discerning clients..</p>
               <div className="mt-4">
                 {currentRegion?.email_1 && (
                   <div className="flex items-center">
                     <Mail size={14} className="mr-1 text-[#B49A5E]" />
-                    <a className="text-gray-400" href={`mailto:${currentRegion.email_1}`}>
-                      {currentRegion.email_1}
-                    </a>
+                    <a className="text-gray-400" href={`mailto:${currentRegion.email_1}`}>{currentRegion.email_1}</a>
                   </div>
                 )}
                 {currentRegion?.email_2 && (
                   <div className="flex items-center">
                     <Mail size={14} className="mr-1 text-[#B49A5E]" />
-                    <a className="text-gray-400" href={`mailto:${currentRegion.email_2}`}>
-                      {currentRegion.email_2}
-                    </a>
+                    <a className="text-gray-400" href={`mailto:${currentRegion.email_2}`}>{currentRegion.email_2}</a>
                   </div>
                 )}
               </div>
             </div>
           </div>
           
-          {/* Quick Links */}
+          {/* Region Icon and Name */}
           <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left">
+            {currentRegion && (
+              <div className="flex items-center mt-4">
+                <img src={currentRegion.icon_url} alt={currentRegion.name} className="w-8 h-8 mr-2" />
+                <span className="text-lg font-semibold text-[#B49A5E]">{currentRegion.name}</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Quick Links */}
+          <div className="lg:col-span-2">
             <h3 className="text-lg font-semibold mb-2 text-[#B49A5E] hover:text-[#fff]">Quick Links</h3>
             <ul className="space-y-1">
-              <li><Link to={`/${currentRegion?.code || ''}`} className="text-gray-400 hover:text-[#B49A5E] text-sm">Home</Link></li>
-              <li><Link to={`/${currentRegion?.code || ''}/products`} className="text-gray-400 hover:text-[#B49A5E] text-sm">Collections</Link></li>
-              <li><Link to={`/${currentRegion?.code || ''}/expertise`} className="text-gray-400 hover:text-[#B49A5E] text-sm">Expertise</Link></li>
-              <li><Link to={`/${currentRegion?.code || ''}/about`} className="text-gray-400 hover:text-[#B49A5E] text-sm">About Us</Link></li>
-              <li><Link to={`/${currentRegion?.code || ''}/contact`} className="text-gray-400 hover:text-[#B49A5E] text-sm">Contact</Link></li>
+              <li><Link to="/" className="text-gray-400 hover:text-[#B49A5E] text-sm">Home</Link></li>
+              <li><Link to="/products" className="text-gray-400 hover:text-[#B49A5E] text-sm">Collections</Link></li>
+              <li><Link to="/expertise" className="text-gray-400 hover:text-[#B49A5E] text-sm">Expertise</Link></li>
+              <li><Link to="/about" className="text-gray-400 hover:text-[#B49A5E] text-sm">About Us</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-[#B49A5E] text-sm">Contact</Link></li>
             </ul>
           </div>
           
@@ -87,54 +93,40 @@ const Footer = () => {
                 <div className="text-gray-400 text-sm">
                   <p className="font-semibold text-[#B49A5E]">{currentRegion.name}</p>
                   <p>{currentRegion.address_1}</p>
-                  <p>{currentRegion.address_2}</p>
-                  <div className="flex items-center mt-1 space-x-4">
-                    {currentRegion.contact_no_1 && (
-                      <div className="flex items-center">
-                        <Phone size={14} className="mr-1 text-[#B49A5E]" />
-                        <span>{currentRegion.contact_no_1}</span>
-                      </div>
-                    )}
-                    {currentRegion.contact_no_2 && (
-                      <div className="flex items-center">
-                        <Phone size={14} className="mr-1 text-[#B49A5E]" />
-                        <span>{currentRegion.contact_no_2}</span>
-                      </div>
-                    )}
-                  </div>
+                  {currentRegion.address_2 && <p>{currentRegion.address_2}</p>}
+                  {currentRegion.city && <p>{currentRegion.city}</p>}
+                  {currentRegion.country && <p>{currentRegion.country}</p>}
                 </div>
               </div>
             )}
           </div>
           
           {/* Contact Info */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             {currentRegion && (
               <div className="space-y-2 text-sm text-gray-400">
+                {currentRegion.contact_no_1 && (
+                  <div className="flex items-center">
+                    <Phone size={14} className="mr-1 text-[#B49A5E]" />
+                    <a href={`tel:${currentRegion.contact_no_1}`} className="hover:text-[#B49A5E]">{currentRegion.contact_no_1}</a>
+                  </div>
+                )}
+                {currentRegion.contact_no_2 && (
+                  <div className="flex items-center">
+                    <Phone size={14} className="mr-1 text-[#B49A5E]" />
+                    <a href={`tel:${currentRegion.contact_no_2}`} className="hover:text-[#B49A5E]">{currentRegion.contact_no_2}</a>
+                  </div>
+                )}
                 {currentRegion.whatsapp_no && (
                   <div className="flex items-center">
                     <Phone size={14} className="mr-1 text-[#B49A5E]" />
-                    <a 
-                      href={`https://wa.me/${currentRegion.whatsapp_no}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-[#B49A5E]"
-                    >
-                      WhatsApp: {currentRegion.whatsapp_no}
-                    </a>
+                    <a href={`https://wa.me/${currentRegion.whatsapp_no}`} target="_blank" rel="noopener noreferrer" className="hover:text-[#B49A5E]">WhatsApp: {currentRegion.whatsapp_no}</a>
                   </div>
                 )}
                 {currentRegion.map_url && (
                   <div className="flex items-center">
                     <Globe size={14} className="mr-1 text-[#B49A5E]" />
-                    <a 
-                      href={currentRegion.map_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-[#B49A5E]"
-                    >
-                      View on Map
-                    </a>
+                    <a href={currentRegion.map_url} target="_blank" rel="noopener noreferrer" className="hover:text-[#B49A5E]">View on Map</a>
                   </div>
                 )}
               </div>
