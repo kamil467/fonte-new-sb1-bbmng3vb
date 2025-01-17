@@ -502,7 +502,7 @@ const Navbar = () => {
                           <img 
                           src={region.icon_url}
                          alt={region.name} 
-                         className="w-6 h-4" 
+                         className="w-4 h-4" 
                        />
                         }
                         <span>{region.name}</span>
