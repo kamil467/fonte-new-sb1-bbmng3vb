@@ -293,10 +293,9 @@ const ProductDetail: React.FC = () => {
                     </div>
                     <div className="flex justify-between border-b pb-4">
                       <span className="font-medium">COMPOSITION</span>
+                      <span>{product.composition || 'N/A'}</span>
                     </div>
-                      <div className="flex justify-between border-b pb-4">
-                        <span>{product.composition || 'N/A'}</span>
-                      </div>
+                      
                  
                   </div>
                 )}

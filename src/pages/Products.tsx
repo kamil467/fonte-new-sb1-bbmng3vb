@@ -346,13 +346,14 @@ const Products = () => {
                         {product.name}
                       </h3>
                       <p className="text-gray-600 text-sm mt-2 line-clamp-2">{product.description}</p>
+                   {/*}
                       {product.price && (
                         <p className="text-[#B49A5E] font-medium mt-4 flex items-center">
                           <span className="text-sm">Starting from</span>
                           <span className="text-lg ml-2">{product.price}</span>
                         </p>
                       )}
-                      
+                        */}
                     </div>
                     </Link>
                   </div>
