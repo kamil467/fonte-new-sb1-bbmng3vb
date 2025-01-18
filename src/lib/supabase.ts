@@ -88,6 +88,8 @@ export interface Region
   country:string;
   map_url:string;
   icon_url: string;
+  enable_business_hours: boolean;
+  business_hours: string;
 }
 export interface RegionCategoryMapping
 {

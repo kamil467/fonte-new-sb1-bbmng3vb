@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, X } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { GoogleMap } from '@react-google-maps/api';
+import { Region, supabase } from '../lib/supabase';
+import GoogleMap from '../components/GoogleMap';
+import { useLocation } from 'react-router-dom';
+import { getRegionIdFromCode, isValidRegionCode } from '../utils/regionUtils';
+
 
 interface FormData {
   name: string;
@@ -20,11 +23,22 @@ interface ModalProps {
   isError?: boolean;
 }
 
-const regionCode = location.pathname.split('/')[1];
-const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
+
+
+
+
+
+// const regionCode = location.pathname.split('/')[1];
+
+
+
+
+
+
+{/*const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
 const omanMap = "https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near";
 const indiaMap= "https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near";
-
+*/}
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, isError = false }) => {
   if (!isOpen) return null;
 
@@ -52,6 +66,40 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, isError = false
 };
 
 const Contact = () => {
+
+  {/**  Fetch Region Data */}
+  const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    fetchRegionData();
+  }, [location.pathname]);
+
+  const fetchRegionData = async () => {
+    try {
+      const pathParts = location.pathname.split('/');
+      const urlRegionCode = pathParts[1];
+
+      if (urlRegionCode && isValidRegionCode(urlRegionCode)) {
+        const regionId = getRegionIdFromCode(urlRegionCode);
+        const { data: regionData, error } = await supabase
+          .from('regions')
+          .select('*')
+          .eq('id', regionId)
+          .single();
+
+        if (error) throw error;
+        setCurrentRegion(regionData);
+      }
+    } catch (error) {
+      console.error('Error fetching region data:', error);
+    }
+  };
+
+
+
+
+
   const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
@@ -140,7 +188,7 @@ const Contact = () => {
         phone: '',
         email: '',
         message: '',
-        region_code: regionCode,
+        region_code: currentRegion?.code || 'global-en',
         is_ok_receive_communication: false,
         dialCode: dialCode
       });
@@ -165,34 +213,44 @@ const Contact = () => {
             <div>
               <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
               <div className="space-y-4">
+             {currentRegion?.enable_business_hours == true ? (
               <div>
               <h3 className="text-xl font-semibold mb-4">Business Hours</h3>
               <div className="space-y-2 text-gray-600">
-                <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                <p>Saturday: 10:00 AM - 4:00 PM</p>
-                <p>Sunday: Closed</p>
+              <div dangerouslySetInnerHTML={{ __html: currentRegion?.business_hours }} />
               </div>
             </div>
+            ) :(<p></p>) }
+            {currentRegion && currentRegion?.email_1 && (
                 <div className="flex items-center">
                   <Mail className="w-6 h-6 mr-3 text-[#B49A5E]" />
-                  <span>info@fonteid.net</span>
+                  <span>{currentRegion?.email_1}</span>
                 </div>
+            )}
+              {currentRegion && currentRegion?.email_2 && (
                 <div className="flex items-center">
                   <Mail className="w-6 h-6 mr-3 text-[#B49A5E]" />
-                  <span>fontetrade@gmail.com</span>
+                  <span>{currentRegion?.email_2}</span>
                 </div>
+              )}
+                {currentRegion && currentRegion?.contact_no_1 && (
                 <div className="flex items-center">
                   <Phone className="w-6 h-6 mr-3 text-[#B49A5E]" />
-                  <span>+971 43442736 (UAE)/ +971 55654260 (UAE)</span>
+                  <span>{currentRegion?.contact_no_1}</span>
                 </div>
+                )}
+                {currentRegion && currentRegion?.contact_no_2 && (
                 <div className="flex items-center">
                   <Phone className="w-6 h-6 mr-3 text-[#B49A5E]" />
-                  <span>+968 92310740 (Oman)</span>
+                  <span>{currentRegion?.contact_no_2}</span>
                 </div>
+                )}
+                 {currentRegion && currentRegion?.whatsapp_no && (
                 <div className="flex items-center">
                   <Phone className="w-6 h-6 mr-3 text-[#B49A5E]" />
-                  <span>+91 123456789 (India)</span>
+                  <a href={`https://wa.me/${currentRegion.whatsapp_no}`} target="_blank" rel="noopener noreferrer" className="hover:text-[#B49A5E]">WhatsApp: {currentRegion.whatsapp_no}</a>
                 </div>
+                )}
               </div>
             </div>
             <div className="bg-white p-8 rounded-lg shadow-lg">
@@ -271,10 +329,10 @@ const Contact = () => {
           </div>
 
     
-        {regionCode === 'uae-en' ? (<GoogleMap mapUrl={uaeMap} />)
-        : regionCode === 'omn-en' ? (<GoogleMap mapUrl={omanMap} />)
-        : regionCode === 'ind-en' ? (<GoogleMap mapUrl={indiaMap} />)
-        :regionCode === 'global-en' && (
+        {currentRegion?.code === 'uae-en' ? (<GoogleMap mapUrl={currentRegion?.map_url} />)
+        : currentRegion?.code === 'omn-en' ? (<GoogleMap mapUrl={currentRegion?.map_url} />)
+        : currentRegion?.code === 'ind-en' ? (<GoogleMap mapUrl={currentRegion?.map_url} />)
+        :currentRegion?.code === 'global-en' && (
           <div className="mt-12">
           <h2 className="text-2xl font-semibold mb-6">Our Locations</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 overflow-x-auto">

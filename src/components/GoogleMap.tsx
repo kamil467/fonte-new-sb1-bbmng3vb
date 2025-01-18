@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GoogleMap = ({ mapUrl }: { mapUrl: string }) => {
+const GoogleMap = ({ mapUrl }: { mapUrl: string | undefined }) => {
   return (
     <div className="w-full h-[400px] relative">
       <iframe 
