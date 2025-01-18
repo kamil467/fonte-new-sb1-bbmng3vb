@@ -36,6 +36,7 @@ export interface Product {
   id: number;
   name: string;
   description: string;
+  slug: string;
   image_url: string;
   subcategory_id: number;
   price?: string;
@@ -43,6 +44,14 @@ export interface Product {
   updated_at: string;
   is_active: boolean;
   region_code: string;
+  reference?: string;
+  composition?: string;
+  technique?: string;
+  width?: string;
+  weight?: string;
+  martindale?: string;
+  repeats?: string;
+  end_use?: string;
   region_product_mappings?: RegionProductMapping[];
 }
 

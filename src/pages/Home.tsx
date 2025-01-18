@@ -82,12 +82,14 @@ const Home = () => {
                   <div className="text-sm uppercase tracking-wider text-[#B49A5E]">Elegance • Timeless</div>
                   <h3 className="text-5xl font-bold text-[#776944]">{collection.title}</h3>
                   <p className="text-gray-600 text-lg leading-relaxed">{collection.description}</p>
+                 {/* 
                   <Link 
                     to={collection.link}
                     className="inline-block bg-black text-white px-8 py-3 rounded-full hover:bg-[#776944] transition-colors"
                   >
                     About Us →
                   </Link>
+                  */}
                 </div>
               </div>
             ))}

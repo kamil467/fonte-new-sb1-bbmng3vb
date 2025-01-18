@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase, Category, SubCategory, Product, RegionCategoryMapping, RegionSubCategoryMapping, RegionProductMapping } from '../lib/supabase';
 
@@ -330,6 +330,10 @@ const Products = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => (
                   <div key={product.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
+                 <Link
+                   to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}/${product.slug}?id=${product.id}`} >
+               
+                 
                     <div className="relative aspect-square overflow-hidden bg-gray-100">
                       <img 
                         src={product.image_url} 
@@ -348,11 +352,14 @@ const Products = () => {
                           <span className="text-lg ml-2">{product.price}</span>
                         </p>
                       )}
+                      
                     </div>
+                    </Link>
                   </div>
                 ))}
               </div>
             )}
+           
           </div>
         </div>
       </div>

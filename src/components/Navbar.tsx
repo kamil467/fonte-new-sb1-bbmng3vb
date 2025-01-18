@@ -385,14 +385,14 @@ const Navbar = () => {
         {/* Main Navigation Links */}
         <div className="border-t border-gray-100">
           <Link
-            to={`/${selectedRegion?.code || ''}/consultation`}
+            to={`/${selectedRegion?.code || ''}/contact`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <span className="text-lg">Free Consultation</span>
           </Link>
           <Link
-            to={`/${selectedRegion?.code || ''}/samples`}
+            to={`/${selectedRegion?.code || ''}/expertise`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
             onClick={() => setIsMobileMenuOpen(false)}
           >
@@ -405,6 +405,7 @@ const Navbar = () => {
           >
             <span className="text-lg">About Us</span>
           </Link>
+          
           <Link
             to={`/${selectedRegion?.code || ''}/contact`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
@@ -412,6 +413,7 @@ const Navbar = () => {
           >
             <span className="text-lg">Contact</span>
           </Link>
+          
         </div>
 
         {/* Contact Information */}
@@ -568,13 +570,13 @@ const Navbar = () => {
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
              
-              <Link to="/consultation" className="flex items-center  hover:text-[#B49A5E]">
+              <Link to={`/${selectedRegion?.code || ''}/contact`}  className="flex items-center  hover:text-[#B49A5E]">
                 Free Consultation
               </Link>
               <Link to="/tools" className="flex items-center  hover:text-[#B49A5E]">
                 Tools & Guides
               </Link>
-              <Link to="/samples" className="flex items-center  hover:text-[#B49A5E]">
+              <Link to={`/${selectedRegion?.code || ''}/expertise`} className="flex items-center  hover:text-[#B49A5E]">
                 Expertise
               </Link>
               <Link to={`/${selectedRegion?.code || ''}/about`} className="flex items-center  hover:text-[#B49A5E]">

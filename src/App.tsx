@@ -48,6 +48,7 @@ function App() {
           <Route path="/:region/products" element={<RegionRoute element={<Products />} path="/products" />} />
           <Route path="/:region/products/:categorySlug" element={<RegionRoute element={<Products />} path="/products/:categorySlug" />} />
           <Route path="/:region/products/:categorySlug/:subcategorySlug" element={<RegionRoute element={<Products />} path="/products/:categorySlug/:subcategorySlug" />} />
+          <Route path="/:region/products/:categorySlug/:subcategorySlug/:productSlug" element={<RegionRoute element={<ProductDetail />} path="/products/:categorySlug/:subcategorySlug/:productSlug" />} />
           <Route path="/:region/expertise" element={<RegionRoute element={<Expertise />} path="/expertise" />} />
           <Route path="/:region/about" element={<RegionRoute element={<About />} path="/about" />} />
           <Route path="/:region/contact" element={<RegionRoute element={<Contact />} path="/contact" />} />

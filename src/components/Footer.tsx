@@ -45,7 +45,7 @@ const Footer = () => {
               className="h-12 mb-2"
             />
             <div className="text-gray-400 text-sm">
-              <p>Luxury furnishing solutions for discerning clients..</p>
+              <p>Luxury furnishing solutions for discerning clients</p>
               <div className="mt-4">
                 {currentRegion?.email_1 && (
                   <div className="flex items-center">
@@ -78,9 +78,9 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-2 text-[#B49A5E] hover:text-[#fff]">Quick Links</h3>
             <ul className="space-y-1">
               <li><Link to="/" className="text-gray-400 hover:text-[#B49A5E] text-sm">Home</Link></li>
-              <li><Link to="/products" className="text-gray-400 hover:text-[#B49A5E] text-sm">Collections</Link></li>
-              <li><Link to="/expertise" className="text-gray-400 hover:text-[#B49A5E] text-sm">Expertise</Link></li>
-              <li><Link to="/about" className="text-gray-400 hover:text-[#B49A5E] text-sm">About Us</Link></li>
+              <li><Link to="/Gallery" className="text-gray-400 hover:text-[#B49A5E] text-sm">Gallery</Link></li>
+              <li><Link to= {`/${currentRegion?.code}/expertise`} className="text-gray-400 hover:text-[#B49A5E] text-sm">Expertise</Link></li>
+              <li><Link to={`/${currentRegion?.code}/about`} className="text-gray-400 hover:text-[#B49A5E] text-sm">About Us</Link></li>
               <li><Link to={`/${currentRegion?.code}/contact`} className="text-gray-400 hover:text-[#B49A5E] text-sm">Contact</Link></li>
             </ul>
           </div>
