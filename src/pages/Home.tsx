@@ -235,50 +235,88 @@ const Home = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-16 bg-[#f7f6f6]">
+      <div className="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Clients Say</h2>
-            <p className="text-gray-600">Discover why clients choose Fonte for their luxury furnishing needs</p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+              What Our Clients Say
+            </h2>
+            <p className="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto">
+              Discover why leading designers and architects choose us for their luxury furnishing needs
+            </p>
           </div>
-          
-          <div className="relative">
+
+          <div className="relative max-w-7xl mx-auto">
+            {/* Navigation Buttons */}
+            <button
+              onClick={() => setCurrentTestimonialSlide(curr => Math.max(0, curr - 1))}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 bg-white p-4 rounded-full shadow-lg hover:bg-gray-50 focus:outline-none hidden md:block transition-transform hover:scale-110"
+            >
+              <ChevronLeft className="w-6 h-6 text-[#B49A5E]" />
+            </button>
+            <button
+              onClick={() => setCurrentTestimonialSlide(curr => Math.min(testimonials.length - 1, curr + 1))}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 bg-white p-4 rounded-full shadow-lg hover:bg-gray-50 focus:outline-none hidden md:block transition-transform hover:scale-110"
+            >
+              <ChevronRight className="w-6 h-6 text-[#B49A5E]" />
+            </button>
+
+            {/* Testimonials */}
             <div className="overflow-hidden">
-              <div 
+              <div
                 className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentTestimonialSlide * (100 / 3)}%)` }}
+                style={{
+                  transform: `translateX(-${currentTestimonialSlide * 100}%)`,
+                }}
               >
-                {/* Duplicate testimonials for infinite loop effect */}
-                {[...testimonials, ...testimonials].map((testimonial, index) => (
-                  <div 
-                    key={index} 
-                    className="w-1/3 flex-shrink-0 px-2 md:px-4"
-                    style={{ transition: 'opacity 0.3s ease-in-out' }}
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={index}
+                    className="w-full flex-shrink-0 px-4 md:px-8"
                   >
-                    <div className="bg-white p-3 md:p-6 rounded-lg shadow-md h-full">
-                      <div className="flex items-center mb-4">
-                        <img 
-                          src={testimonial.image} 
-                          alt={testimonial.name} 
-                          className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover mr-2 md:mr-4"
-                        />
-                        <div>
-                          <h3 className="font-semibold text-sm md:text-lg">{testimonial.name}</h3>
-                          <p className="text-gray-600 text-xs md:text-sm">{testimonial.location}</p>
-                        </div>
+                    <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 h-full border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                      {/* Quote Icon */}
+                      <div className="mb-8">
+                        <svg className="w-12 h-12 text-[#B49A5E] opacity-40" fill="currentColor" viewBox="0 0 32 32">
+                          <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z"/>
+                        </svg>
                       </div>
-                      <p className="text-gray-700 italic mb-4 text-sm md:text-base">"{testimonial.testimonial}"</p>
-                      <div className="flex text-[#B49A5E]">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            className="w-3 h-3 md:w-5 md:h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
+
+                      {/* Testimonial Text */}
+                      <p className="text-gray-700 text-lg md:text-2xl mb-8 leading-relaxed italic">
+                        "{testimonial.testimonial}"
+                      </p>
+
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                        {/* Author Info */}
+                        <div className="flex items-center mb-4 md:mb-0">
+                          <div className="relative">
+                            <img
+                              src={testimonial.image}
+                              alt={testimonial.name}
+                              className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-[#B49A5E]/20"
+                            />
+                            <div className="absolute inset-0 rounded-full border-4 border-[#B49A5E]/10"></div>
+                          </div>
+                          <div className="ml-4 md:ml-6">
+                            <h3 className="font-semibold text-xl md:text-2xl text-gray-900 mb-1">{testimonial.name}</h3>
+                            <p className="text-[#B49A5E] text-lg">{testimonial.location}</p>
+                          </div>
+                        </div>
+
+                        {/* Rating */}
+                        <div className="flex space-x-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className="w-6 h-6 md:w-7 md:h-7 text-[#B49A5E]"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -286,22 +324,38 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Dots Navigation */}
-            <div className="flex justify-center space-x-2 mt-6">
-              {testimonials.slice(0, testimonials.length - 2).map((_, index) => (
+            {/* Desktop Dots Navigation */}
+            <div className="hidden md:flex justify-center space-x-3 mt-12">
+              {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonialSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentTestimonialSlide === index 
+                      ? 'bg-[#B49A5E] w-8' 
+                      : 'bg-gray-300 hover:bg-[#B49A5E]/50'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Mobile Dots Navigation */}
+            <div className="flex md:hidden justify-center space-x-2 mt-6">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonialSlide(index)}
+                  className={`w-2.5 h-2.5 rounded-full transition-colors ${
                     currentTestimonialSlide === index ? 'bg-[#B49A5E]' : 'bg-gray-300'
                   }`}
-                  aria-label={`Go to testimonial group ${index + 1}`}
+                  aria-label={`Go to testimonial ${index + 1}`}
                 />
               ))}
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       <section className="py-16 bg-[#B49A5E] bg-opacity-10">
         <div className="container mx-auto px-4">

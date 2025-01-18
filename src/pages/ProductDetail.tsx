@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import { ChevronRight, Maximize2, ChevronDown, ChevronUp, Phone } from 'lucide-react';
+import { ChevronRight, Maximize2, ChevronDown, ChevronUp, Phone, Home, Store, FolderOpen, Tag, Box } from 'lucide-react';
 import { supabase, Product, ProductColor, ProductCareInstruction, Region } from '../lib/supabase';
 
 interface TabProps {
@@ -180,28 +180,123 @@ const ProductDetail: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
-        <Link to={`/${regionCode || ''}`} className="hover:text-gray-900">Home</Link>
-        <ChevronRight className="w-4 h-4" />
-        <Link to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`}  className="hover:text-gray-900">Products</Link>
-        <ChevronRight className="w-4 h-4" />
-        <Link 
-          to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`} 
-          className="hover:text-gray-900"
-        >
-          {product.subcategories?.categories?.name || 'N/A'}
-        </Link>
-        <ChevronRight className="w-4 h-4" />
-        <Link 
-          to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}/${product.subcategories?.slug}`} 
-          className="hover:text-gray-900"
-        >
-          {product.subcategories?.name || 'N/A'}
-        </Link>
-        <ChevronRight className="w-4 h-4" />
-        <span className="text-gray-900">{product.name}</span>
-      </div>
+      {/* Breadcrumb Navigation */}
+      <nav className="py-3 md:py-6 bg-gradient-to-r from-gray-50 via-white to-gray-50">
+        {/* Desktop Breadcrumb */}
+        <div className="hidden md:block container mx-auto px-4">
+          <div className="flex items-center space-x-3 text-base">
+            <Link 
+              to={`/${regionCode || ''}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+            >
+              <Home className="w-5 h-5 mr-2" />
+              <span>Home</span>
+            </Link>
+
+            <span className="text-gray-400">
+              <ChevronRight className="w-5 h-5" />
+            </span>
+
+            <Link 
+              to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+            >
+              <Store className="w-5 h-5 mr-2" />
+              <span>Products</span>
+            </Link>
+
+            {product.subcategories?.category && (
+              <>
+                <span className="text-gray-400">
+                  <ChevronRight className="w-5 h-5" />
+                </span>
+                <Link 
+                  to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+                >
+                  <FolderOpen className="w-5 h-5 mr-2" />
+                  <span>{product.subcategories?.category?.name}</span>
+                </Link>
+              </>
+            )}
+
+            {product.subcategories && (
+              <>
+                <span className="text-gray-400">
+                  <ChevronRight className="w-5 h-5" />
+                </span>
+                <Link 
+                 to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}/${product.subcategories?.slug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+                >
+                  <Tag className="w-5 h-5 mr-2" />
+                  <span>{product.subcategories?.name}</span>
+                </Link>
+              </>
+            )}
+
+            <span className="text-gray-400">
+              <ChevronRight className="w-5 h-5" />
+            </span>
+
+            <span className="text-[#B49A5E] font-medium flex items-center">
+              <Box className="w-5 h-5 mr-2" />
+              <span className="truncate max-w-xs">{product?.name}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Mobile Breadcrumb */}
+        <div className="md:hidden container mx-auto px-4">
+          <div className="flex flex-wrap items-center gap-1.5 text-sm">
+            <Link 
+               to={`/${regionCode || ''}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200"
+            >
+              <Home className="w-4 h-4" />
+            </Link>
+
+            <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+
+            <Link 
+              to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+            >
+              <Store className="w-4 h-4" />
+            </Link>
+
+            {product.subcategories?.category && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                <Link 
+                   to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 bg-gray-50 px-2 py-0.5 rounded-full text-xs"
+                >
+                  {product.subcategories?.category?.name}
+                </Link>
+              </>
+            )}
+
+            {product.subcategories && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                <Link 
+                 to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}/${product.subcategories?.slug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 bg-gray-50 px-2 py-0.5 rounded-full text-xs"
+                >
+                  {product.subcategories?.name}
+                </Link>
+              </>
+            )}
+
+            <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+            
+            <span className="text-[#B49A5E] font-medium bg-[#B49A5E]/10 px-2 py-0.5 rounded-full text-xs truncate max-w-[120px]">
+              {product?.name}
+            </span>
+          </div>
+        </div>
+      </nav>
 
       {/* Product Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
