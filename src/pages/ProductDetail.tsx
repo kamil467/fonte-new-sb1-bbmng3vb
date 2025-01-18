@@ -79,7 +79,13 @@ const ProductDetail: React.FC = () => {
           *,
           subcategories:subcategory_id(
             id,
-            name
+            name,
+            slug,
+            categories:category_id(
+              id,
+              name,
+              slug
+            )
           ),
           colors:product_colors(*),
           care_instructions:product_care_instructions(*)
@@ -176,11 +182,23 @@ const ProductDetail: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
-        <Link to="/" className="hover:text-gray-900">Home</Link>
+        <Link to={`/${regionCode || ''}`} className="hover:text-gray-900">Home</Link>
         <ChevronRight className="w-4 h-4" />
-        <Link to="/products" className="hover:text-gray-900">Products</Link>
+        <Link to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`}  className="hover:text-gray-900">Products</Link>
         <ChevronRight className="w-4 h-4" />
-        <Link to="/products" className="hover:text-gray-900">{product.subcategories?.name || 'N/A'}</Link>
+        <Link 
+          to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}`} 
+          className="hover:text-gray-900"
+        >
+          {product.subcategories?.categories?.name || 'N/A'}
+        </Link>
+        <ChevronRight className="w-4 h-4" />
+        <Link 
+          to={`/${regionCode || ''}/products/${product.subcategories?.categories?.slug}/${product.subcategories?.slug}`} 
+          className="hover:text-gray-900"
+        >
+          {product.subcategories?.name || 'N/A'}
+        </Link>
         <ChevronRight className="w-4 h-4" />
         <span className="text-gray-900">{product.name}</span>
       </div>
