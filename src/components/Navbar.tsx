@@ -39,6 +39,8 @@ const Navbar = () => {
         const region = regions.find(r => r.id === regionId);
         if (region) {
           setSelectedRegion(region);
+          // Fetch mappings immediately after setting region
+          await handleRegionChange(region);
         }
       } else {
         // No valid region code in URL - detect from location
@@ -48,19 +50,14 @@ const Navbar = () => {
         if (region) {
           setSelectedRegion(region);
           updateUrlWithRegion(userRegion);
+          // Fetch mappings immediately after setting region
+          await handleRegionChange(region);
         }
       }
     };
 
     initializeRegion();
   }, [regions, location.pathname]);
-
-  // Finally fetch categories and subcategories when region changes
-  useEffect(() => {
-    if (selectedRegion) {
-      handleRegionChange();
-    }
-  }, [selectedRegion]);
 
   useEffect(() => {
     fetchRegions();
@@ -72,20 +69,66 @@ const Navbar = () => {
     }
   }, [regionCategoryMappings, regionSubCategoryMappings]);
 
-  const handleRegionChange = async () => {
-    if (!selectedRegion) return;
+  const handleRegionChange = async (region: Region) => {
+    if (!region) return;
     
     setLoading(true);
     setError(null);
     setCategories([]);
     setSubCategories([]);
+    setRegionCategoryMappings([]);
+    setRegionSubCategoryMappings([]);
 
     try {
-      await fetchRegionMappings();
+      // Clear existing mappings
+      // Fetch category mappings
+      const { data: categoryMappings, error: categoryError } = await supabase
+        .from('region_category_mapping')
+        .select('*')
+        .eq('region_id', region.id);
+
+      if (categoryError) throw categoryError;
+
+      // Fetch subcategory mappings
+      const { data: subCategoryMappings, error: subCategoryError } = await supabase
+        .from('region_subcategory_mapping')
+        .select('*')
+        .eq('region_id', region.id);
+
+      if (subCategoryError) throw subCategoryError;
+
+      // Set both mappings and fetch categories/subcategories
+      setRegionCategoryMappings(categoryMappings || []);
+      setRegionSubCategoryMappings(subCategoryMappings || []);
+
+      if (categoryMappings?.length > 0) {
+        const categoryIds = categoryMappings.map(mapping => mapping.category_id);
+        const { data: categories, error: categoriesError } = await supabase
+          .from('categories')
+          .select('*')
+          .in('id', categoryIds)
+          .order('order_index');
+
+        if (categoriesError) throw categoriesError;
+        setCategories(categories || []);
+      }
+
+      if (subCategoryMappings?.length > 0) {
+        const subcategoryIds = subCategoryMappings.map(mapping => mapping.subcategory_id);
+        const { data: subcategories, error: subcategoriesError } = await supabase
+          .from('sub_categories')
+          .select('*')
+          .in('id', subcategoryIds)
+          .order('order_index');
+
+        if (subcategoriesError) throw subcategoriesError;
+        setSubCategories(subcategories || []);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load data';
       setError(errorMessage);
       console.error('Error during region change:', err);
+    } finally {
       setLoading(false);
     }
   };
@@ -93,6 +136,8 @@ const Navbar = () => {
   const handleRegionSelect = async (region: Region) => {
     setSelectedRegion(region);
     setIsRegionDropdownOpen(false);
+    // Fetch mappings immediately after selecting new region
+    await handleRegionChange(region);
     navigate(`/${region.code}`);
   };
 
@@ -507,13 +552,13 @@ const Navbar = () => {
                         onClick={() => handleRegionSelect(region)}
                         className="flex items-center space-x-3 w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
-                        {
+                       
                           <img 
                           src={region.icon_url}
                          alt={region.name} 
                          className="w-4 h-4" 
                        />
-                        }
+                        
                         <span>{region.name}</span>
                       </button>
                     ))}
