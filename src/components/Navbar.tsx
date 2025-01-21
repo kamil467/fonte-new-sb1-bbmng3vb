@@ -35,38 +35,21 @@ const Navbar = () => {
 
       if (urlRegionCode && isValidRegionCode(urlRegionCode)) {
         // Valid region code in URL - use it
-        const regionId = getRegionIdFromCode(urlRegionCode as RegionCode);
+        const regionId = getRegionIdFromCode(urlRegionCode);
         const region = regions.find(r => r.id === regionId);
         if (region) {
           setSelectedRegion(region);
-          setLoading(false);
-          return; // Exit early if we have a valid region from URL
         }
-      }
-      
-      // Only try to get region from location if we don't have a valid region from URL
-      try {
+      } else {
+        // No valid region code in URL - detect from location
         const userRegion = await getRegionFromLocation();
         const regionId = getRegionIdFromCode(userRegion);
         const region = regions.find(r => r.id === regionId);
         if (region) {
           setSelectedRegion(region);
-          if (!urlRegionCode || !isValidRegionCode(urlRegionCode)) {
-            updateUrlWithRegion(userRegion);
-          }
-        }
-      } catch (error) {
-        console.error('Error initializing region:', error);
-        // Fallback to global-en if everything fails
-        const globalRegion = regions.find(r => r.id === 1);
-        if (globalRegion) {
-          setSelectedRegion(globalRegion);
-          if (!urlRegionCode || !isValidRegionCode(urlRegionCode)) {
-            updateUrlWithRegion('global-en');
-          }
+          updateUrlWithRegion(userRegion);
         }
       }
-      setLoading(false);
     };
 
     initializeRegion();
@@ -409,35 +392,28 @@ const Navbar = () => {
             <span className="text-lg">Free Consultation</span>
           </Link>
           <Link
-            to="/tools" className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Tools & Guides
-          </Link>
-          <Link
             to={`/${selectedRegion?.code || ''}/expertise`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Expertise
+            <span className="text-lg">Expertise</span>
           </Link>
           <Link
-            to={`/${selectedRegion?.code || ''}/about`}
+            to={`/${selectedRegion?.code || ''}/About`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            {/*<span className="mr-2">360°</span>*/}
-            About Us
+            <span className="text-lg">About Us</span>
           </Link>
-
+          
           <Link
             to={`/${selectedRegion?.code || ''}/contact`}
             className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors border-t border-gray-100"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            {/*<span className="mr-2">360°</span>*/}
-           Contact
+            <span className="text-lg">Contact</span>
           </Link>
+          
         </div>
 
         {/* Contact Information */}
@@ -494,7 +470,7 @@ const Navbar = () => {
             </div>
                 )}
           </div>
-          <div className="hidden md:flex  items-center space-x-4">
+          <div className="flex items-center space-x-4">
             {/* Region Selector */}
             <div className="relative">
               <button
