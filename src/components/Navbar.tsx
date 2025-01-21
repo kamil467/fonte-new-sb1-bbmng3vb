@@ -494,7 +494,7 @@ const Navbar = () => {
             </div>
                 )}
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="hidden md:flex  items-center space-x-4">
             {/* Region Selector */}
             <div className="relative">
               <button
