@@ -5,7 +5,6 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
-import Projects from './pages/Projects';
 import Expertise from './pages/Expertise';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -47,8 +46,9 @@ function App() {
           <Route path="/" element={<Navigate to="/global-en" replace />} />
           <Route path="/:region" element={<RegionRoute element={<Home />} path="/" />} />
           <Route path="/:region/products" element={<RegionRoute element={<Products />} path="/products" />} />
-          <Route path="/:region/products/:id" element={<RegionRoute element={<ProductDetail />} path="/products/:id" />} />
-          <Route path="/:region/projects" element={<RegionRoute element={<Projects />} path="/projects" />} />
+          <Route path="/:region/products/:categorySlug" element={<RegionRoute element={<Products />} path="/products/:categorySlug" />} />
+          <Route path="/:region/products/:categorySlug/:subcategorySlug" element={<RegionRoute element={<Products />} path="/products/:categorySlug/:subcategorySlug" />} />
+          <Route path="/:region/products/:categorySlug/:subcategorySlug/:productSlug" element={<RegionRoute element={<ProductDetail />} path="/products/:categorySlug/:subcategorySlug/:productSlug" />} />
           <Route path="/:region/expertise" element={<RegionRoute element={<Expertise />} path="/expertise" />} />
           <Route path="/:region/about" element={<RegionRoute element={<About />} path="/about" />} />
           <Route path="/:region/contact" element={<RegionRoute element={<Contact />} path="/contact" />} />
