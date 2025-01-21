@@ -545,7 +545,7 @@ const Navbar = () => {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center">
+            <Link to={`/${selectedRegion?.code || ''}`} className="flex items-center">
               <img 
                 src="https://ik.imagekit.io/kamil467/fonte_logo-removebg.png?updatedAt=1736246322296" 
                 alt="Fonte" 
