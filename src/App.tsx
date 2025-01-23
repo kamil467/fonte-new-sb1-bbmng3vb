@@ -49,7 +49,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <div className="min-h-screen bg-white pt-20">
-        <Navbar onScrollToGrid={scrollToGrid}/>
+        <Navbar productGridRef={productGridRef}/>
        
         <Routes>
           <Route path="/" element={<Navigate to="/global-en" replace />} />

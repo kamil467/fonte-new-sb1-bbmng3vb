@@ -4,8 +4,7 @@ import { Mail, Menu, Phone, X, ChevronDown, Loader2, Globe } from 'lucide-react'
 import { supabase, Category, SubCategory, Region, RegionCategoryMapping, RegionSubCategoryMapping } from '../lib/supabase';
 import { RegionCode, getRegionIdFromCode, getRegionCodeFromId, getRegionFromLocation, updateUrlWithRegion, isValidRegionCode } from '../utils/regionUtils';
 
-const Navbar = ({onScrollToGrid}) => {
-  
+const Navbar = ({productGridRef}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubCategories] = useState<SubCategory[]>([]);
@@ -416,7 +415,9 @@ const Navbar = ({onScrollToGrid}) => {
                         key={subcategory.id}
                         to={`/${selectedRegion?.code || ''}/products/${category.slug}/${subcategory.slug}`}
                         className="block px-6 py-3 hover:bg-gray-100 transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={() =>{ 
+                          setIsMobileMenuOpen(false);
+                        }}
                       >
                         {subcategory.name}
                       </Link>
@@ -705,7 +706,7 @@ const Navbar = ({onScrollToGrid}) => {
               {getVisibleCategories().map((category) => (
                 <div key={category.id} className="group relative">
                   <Link 
-                    to={getCategoryUrl(category.slug)} onClick={onScrollToGrid}
+                    to={getCategoryUrl(category.slug)} 
                     className={`text-sm font-medium hover:text-gray-600 hover:border-b-2 hover:border-[#B49A5E] whitespace-nowrap px-4 py-2`}
                   >
                     {category.name}
@@ -718,7 +719,7 @@ const Navbar = ({onScrollToGrid}) => {
                             <h2 className="text-3xl font-light">{category.name}</h2>
                             <div className="mt-4">
                               <Link
-                                to={getCategoryUrl(category.slug)} onClick={onScrollToGrid}
+                                to={getCategoryUrl(category.slug)} 
                                 className="text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B] transition-colors inline-flex items-center"
                               >
                                 Shop All
@@ -734,6 +735,22 @@ const Navbar = ({onScrollToGrid}) => {
                                 key={subCategory.id}
                                 to={getSubCategoryUrl(category.slug, subCategory.slug)}
                                 className="flex items-center space-x-3 py-1 group/item"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  navigate(`/${selectedRegion?.code || ''}/products/${category.slug}/${subCategory.slug}`);
+                                  setTimeout(() => {
+                                  if(productGridRef?.current)
+                                  {
+                                    console.log('Scrolling to product grid');
+                                    productGridRef.current?.scrollIntoView({ behavior: 'smooth' });
+                                  }
+                                  else
+                                  {
+                                    console.log('productGridRef is not defined');
+                                  }
+                                  }, 100);
+
+                                }}
                               >
                                 {subCategory.icon_url && (
                                   <img 
