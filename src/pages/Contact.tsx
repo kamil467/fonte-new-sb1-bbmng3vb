@@ -205,7 +205,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="py-16 bg-[#B49A5E] bg-opacity-5">
+    <div className="py-24 bg-[#B49A5E] bg-opacity-5">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-center mb-12">Contact Us</h1>
