@@ -192,17 +192,43 @@ const Products = () => {
         return;
       }
 
-      // Get all products that belong to any of these subcategories
+      // Get all products that belong to any of these subcategories that belong to region
+      // product should be fetched if subcategories and product are allowed to display in the region
       const subcategoryIds = categorySubcategories.map(sub => sub.id);
-      const { data: products, error: productsError } = await supabase
+      
+     {/*commented bug code:*  const { data: products, error: productsError } = await supabase
         .from('products')
         .select(`
           *,
-          region_product_mapping!inner(region_id, product_id)
+          region_product_mapping!inner(region_id, product_id),
+          region
         `)
         .eq('region_product_mapping.region_id', regionData.data.id)
         .in('subcategory_id', subcategoryIds)
         .eq('is_active', true);
+   */}
+   {/* Fixed data issue when fetching all products using for specific region and category */}
+        const { data: products, error: productsError }= await supabase
+        .from('products')
+        .select(`
+          *,
+          region_product_mapping!inner (
+           regions!inner (
+               id
+              )
+            ),
+          subcategory_id,
+          sub_categories!inner (
+            id,
+            region_subcategory_mapping!inner (
+              region_id
+            )
+          )
+        `)
+        .eq('region_product_mapping.regions.id', regionData.data.id) // Filter by region ID
+        .eq('sub_categories. region_subcategory_mapping.region_id',regionData.data.id)
+        .eq('sub_categories.category_id', categoryId); // Filter by category ID
+
 
       if (productsError) throw productsError;
       setProducts(products || []);
