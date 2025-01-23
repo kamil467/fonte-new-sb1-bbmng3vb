@@ -338,23 +338,23 @@ const Products = ({productGridRef}) => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map((product) => (
-                  <div key={product.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 flex flex-col">
+                  <div key={product.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 flex flex-col h-[450px]">
                     <Link
                       to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}/${product.slug}?id=${product.id}`}
-                      className="flex flex-col flex-grow"
+                      className="flex flex-col h-full"
                     >
-                      <div className="relative aspect-square bg-gray-100">
+                      <div className="relative h-[250px] bg-gray-100">
                         <img 
                           src={product.image_url} 
                           alt={product.name} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <div className="p-6 flex-grow">
-                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-[#B49A5E] transition-colors mb-2 overflow-hidden">
+                      <div className="p-6 flex flex-col flex-grow">
+                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-[#B49A5E] transition-colors mb-3 line-clamp-2">
                           {product.name}
                         </h3>
-                        <p className="text-gray-600 text-sm line-clamp-2 overflow-hidden">
+                        <p className="text-gray-600 text-sm line-clamp-3">
                           {product.description}
                         </p>
                       </div>
