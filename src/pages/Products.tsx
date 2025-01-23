@@ -276,28 +276,28 @@ const Products = ({productGridRef}) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div  className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
-      <div  className="relative h-[50vh] bg-white">
-        <div className="absolute inset-0">
+      <div className="relative h-[50vh] bg-white">
+        <div  className="absolute inset-0">
           <img 
             src={categories.find(c => c.slug === categorySlug)?.image_url}
             alt="Products Banner"
             className="w-full h-full object-cover"
             loading="eager"
           />
-          <div className="absolute inset-0 bg-black/30" /> {/* Overlay for better text visibility */}
+          <div  className="absolute inset-0 bg-black/30" /> {/* Overlay for better text visibility */}
         </div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+        <div   className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-5xl font-light mb-4">{categories.find(c => c.slug === categorySlug)?.name}</h1>
-          <p className="text-lg text-gray-200 max-w-2xl text-center px-4">
+          <p ref={productGridRef} className="text-lg text-gray-200 max-w-2xl text-center px-4">
             {categories.find(c => c.slug === categorySlug)?.description}
           </p>
         </div>
       </div>
-
+ 
       {/* Main Content */}
-      <div   ref={productGridRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div   className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col justify-center items-center md:flex-row gap-8">
           {/* Filters Sidebar - only visible on desktop */}
           {/*Hide this for feedback comment:- 
