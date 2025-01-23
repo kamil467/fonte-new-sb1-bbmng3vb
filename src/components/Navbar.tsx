@@ -717,8 +717,8 @@ const Navbar = ({productGridRef}) => {
                         <div className="flex py-8">
                           <div className="w-[260px]">
                             <h2 className="text-3xl font-light">{category.name}</h2>
-                            <div className="mt-4">
-                              <Link
+                            <div className="mt-4 hidden">
+                              <Link 
                                 to={getCategoryUrl(category.slug)} 
                                 className="text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B] transition-colors inline-flex items-center"
                               >
@@ -834,7 +834,7 @@ const Navbar = ({productGridRef}) => {
                                     </Link>
                                   ))}
                                   <div className="border-t my-2"></div>
-                                  <Link
+                                  <Link hidden={true}
                                     to={getCategoryUrl(category.slug)}
                                     className="flex items-center px-4 py-2 text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B]"
                                   >
