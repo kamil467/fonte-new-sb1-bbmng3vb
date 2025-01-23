@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -37,17 +37,26 @@ const RegionRoute: React.FC<{
 };
 
 function App() {
+  const productGridRef = useRef<HTMLDivElement>(null);
+
+  const scrollToGrid = () => {
+    if (productGridRef.current) {
+      productGridRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-white">
-        <Navbar />
+      <div className="min-h-screen bg-white pt-20">
+        <Navbar onScrollToGrid={scrollToGrid}/>
+       
         <Routes>
           <Route path="/" element={<Navigate to="/global-en" replace />} />
           <Route path="/:region" element={<RegionRoute element={<Home />} path="/" />} />
-          <Route path="/:region/products" element={<RegionRoute element={<Products />} path="/products" />} />
-          <Route path="/:region/products/:categorySlug" element={<RegionRoute element={<Products />} path="/products/:categorySlug" />} />
-          <Route path="/:region/products/:categorySlug/:subcategorySlug" element={<RegionRoute element={<Products />} path="/products/:categorySlug/:subcategorySlug" />} />
+          <Route path="/:region/products" element={<RegionRoute element={<Products productGridRef={productGridRef}  />} path="/products" />} />
+          <Route path="/:region/products/:categorySlug" element={<RegionRoute element={<Products productGridRef={productGridRef}  />} path="/products/:categorySlug" />} />
+          <Route path="/:region/products/:categorySlug/:subcategorySlug" element={<RegionRoute element={<Products productGridRef={productGridRef}  />} path="/products/:categorySlug/:subcategorySlug" />} />
           <Route path="/:region/products/:categorySlug/:subcategorySlug/:productSlug" element={<RegionRoute element={<ProductDetail />} path="/products/:categorySlug/:subcategorySlug/:productSlug" />} />
           <Route path="/:region/expertise" element={<RegionRoute element={<Expertise />} path="/expertise" />} />
           <Route path="/:region/about" element={<RegionRoute element={<About />} path="/about" />} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase, Category, SubCategory, Product, RegionCategoryMapping, RegionSubCategoryMapping, RegionProductMapping } from '../lib/supabase';
@@ -13,7 +13,7 @@ interface MappedProduct extends Product {
   region_product_mappings: RegionProductMapping[];
 }
 
-const Products = () => {
+const Products = ({productGridRef}) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -27,11 +27,17 @@ const Products = () => {
   const { categorySlug, subcategorySlug } = useParams();
   const location = useLocation();
   const regionCode = location.pathname.split('/')[1];
-
+ {/*} const productGridRef = useRef<HTMLDivElement>(null); */}
   useEffect(() => {
     fetchData();
   }, [regionCode]);
 
+  useEffect(() => {
+    if (productGridRef.current) {
+      productGridRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+ 
   useEffect(() => {
     if (categories.length > 0 && subcategories.length > 0 && regionCategoryMappings.length > 0 && regionSubCategoryMappings.length > 0) {
       organizeFilters();
@@ -168,6 +174,7 @@ const Products = () => {
   };
 
   const fetchProductsByCategory = async (categoryId: number) => {
+    
     try {
       // Get region data
       const regionData = await supabase
@@ -245,7 +252,7 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
-      <div className="relative h-[50vh] bg-white">
+      <div  className="relative h-[50vh] bg-white">
         <div className="absolute inset-0">
           <img 
             src={categories.find(c => c.slug === categorySlug)?.image_url}
@@ -264,9 +271,10 @@ const Products = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col md:flex-row gap-8">
+      <div   ref={productGridRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col justify-center items-center md:flex-row gap-8">
           {/* Filters Sidebar - only visible on desktop */}
+          {/*Hide this for feedback comment:- 
           <div className="hidden md:block w-1/4">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 sticky top-24"> 
               <div className="p-4 border-b border-gray-100">
@@ -312,9 +320,10 @@ const Products = () => {
               ))}
             </div>
           </div>
+          */}
 
           {/* Products Grid */}
-          <div className="w-full md:w-3/4">
+          <div className="w-full flex-col  flex justify-center items-center md:w-3/4 ">
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#B49A5E] border-t-transparent"></div>
@@ -322,7 +331,7 @@ const Products = () => {
             ) : error ? (
               <div className="text-red-600 text-center py-8 bg-red-50 rounded-lg">{error}</div>
             ) : products.length === 0 ? (
-              <div className="text-center py-12 px-4 bg-white rounded-lg border border-gray-100">
+              <div className=" text-center py-12 px-4 bg-white rounded-lg border border-gray-100">
                 <p className="text-lg text-gray-600">No products found for this category</p>
                 <p className="text-sm text-gray-500 mt-2">Try selecting a different category or subcategory</p>
               </div>

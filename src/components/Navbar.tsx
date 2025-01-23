@@ -4,7 +4,8 @@ import { Mail, Menu, Phone, X, ChevronDown, Loader2, Globe } from 'lucide-react'
 import { supabase, Category, SubCategory, Region, RegionCategoryMapping, RegionSubCategoryMapping } from '../lib/supabase';
 import { RegionCode, getRegionIdFromCode, getRegionCodeFromId, getRegionFromLocation, updateUrlWithRegion, isValidRegionCode } from '../utils/regionUtils';
 
-const Navbar = () => {
+const Navbar = ({onScrollToGrid}) => {
+  
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubCategories] = useState<SubCategory[]>([]);
@@ -499,7 +500,7 @@ const Navbar = () => {
       )}
 
       {/* Top Bar */}
-      <div className="bg-black text-white py-2 px-4">
+      <div className="hidden bg-black text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
           {selectedRegion && selectedRegion.email_1 && (
@@ -516,7 +517,7 @@ const Navbar = () => {
                 )}
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            {/* Region Selector */}
+            {/*  Hide this for feedback comment:-  Region Selector  
             <div className="relative">
               <button
                 onClick={() => !loading && setIsRegionDropdownOpen(!isRegionDropdownOpen)}
@@ -566,6 +567,7 @@ const Navbar = () => {
                 </div>
               )}
             </div>
+            */}
             <span>|</span>
             <select className="bg-black text-white border-none focus:outline-none">
               <option value="en">English</option>
@@ -576,7 +578,7 @@ const Navbar = () => {
       </div>
 
       {/* Main Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             {/* Mobile Menu Button */}
@@ -633,6 +635,67 @@ const Navbar = () => {
                 {/*<span className="mr-2">360°</span>*/}
                Contact
               </Link>
+              <div className="hidden md:flex items-center space-x-4">
+            {/* Region Selector */}
+            <div className="relative">
+              <button
+                onClick={() => !loading && setIsRegionDropdownOpen(!isRegionDropdownOpen)}
+                disabled={loading}
+                className={`flex items-center space-x-2 hover:text-gray-300 focus:outline-none ${
+                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {selectedRegion && (
+                  <>
+                    {loading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <img 
+                              src={selectedRegion.icon_url}
+                              alt={selectedRegion.name} width={48}
+                              className="w-4 h-4" 
+                            />
+                     {/*  Hide this for feedback comment:-   <span>{selectedRegion.name}</span> */}
+                        <ChevronDown className="w-4 h-4" />
+                      </>
+                    )}
+                  </>
+                )}
+              </button>
+              {isRegionDropdownOpen && !loading && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
+                  <div className="py-2">
+                    {regions.map((region) => (
+                      <button
+                        key={region.id}
+                        onClick={() => handleRegionSelect(region)}
+                        className="flex items-center space-x-3 w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                       
+                          <img 
+                          src={region.icon_url}
+                         alt={region.name} 
+                         className="w-4 h-4" 
+                       />
+                        
+                        <span>{region.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+              {/*  Hide this for feedback comment:-   
+            <span>|</span>
+            <select className="bg-black text-white border-none focus:outline-none">
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
+            </select>
+            */}
+          </div>
+
+
             </div>
           </div>
 
@@ -642,7 +705,7 @@ const Navbar = () => {
               {getVisibleCategories().map((category) => (
                 <div key={category.id} className="group relative">
                   <Link 
-                    to={getCategoryUrl(category.slug)}
+                    to={getCategoryUrl(category.slug)} onClick={onScrollToGrid}
                     className={`text-sm font-medium hover:text-gray-600 hover:border-b-2 hover:border-[#B49A5E] whitespace-nowrap px-4 py-2`}
                   >
                     {category.name}
@@ -655,7 +718,7 @@ const Navbar = () => {
                             <h2 className="text-3xl font-light">{category.name}</h2>
                             <div className="mt-4">
                               <Link
-                                to={getCategoryUrl(category.slug)}
+                                to={getCategoryUrl(category.slug)} onClick={onScrollToGrid}
                                 className="text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B] transition-colors inline-flex items-center"
                               >
                                 Shop All

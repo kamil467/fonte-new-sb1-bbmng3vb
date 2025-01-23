@@ -130,7 +130,7 @@ const ProductDetail: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-24">
         <div className="max-w-6xl mx-auto">
           <div className="animate-pulse">
             <div className="flex flex-col md:flex-row gap-8">
@@ -162,7 +162,7 @@ const ProductDetail: React.FC = () => {
 
   if (error || !product) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-24">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Product not found'}</p>
           <button
@@ -179,7 +179,7 @@ const ProductDetail: React.FC = () => {
   const selectedImage = colors.find(c => c.color_code === selectedColor)?.image_url;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-24">
       {/* Breadcrumb Navigation */}
       <nav className="py-3 md:py-6 bg-gradient-to-r from-gray-50 via-white to-gray-50">
         {/* Desktop Breadcrumb */}
