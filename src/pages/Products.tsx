@@ -336,34 +336,28 @@ const Products = ({productGridRef}) => {
                 <p className="text-sm text-gray-500 mt-2">Try selecting a different category or subcategory</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {products.map((product) => (
-                  <div key={product.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
-                 <Link
-                   to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}/${product.slug}?id=${product.id}`} >
-               
-                 
-                    <div className="relative aspect-square overflow-hidden bg-gray-100">
-                      <img 
-                        src={product.image_url} 
-                        alt={product.name} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-lg font-medium text-gray-900 group-hover:text-[#B49A5E] transition-colors">
-                        {product.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm mt-2 line-clamp-2">{product.description}</p>
-                   {/*}
-                      {product.price && (
-                        <p className="text-[#B49A5E] font-medium mt-4 flex items-center">
-                          <span className="text-sm">Starting from</span>
-                          <span className="text-lg ml-2">{product.price}</span>
+                  <div key={product.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 flex flex-col">
+                    <Link
+                      to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}/${product.slug}?id=${product.id}`}
+                      className="flex flex-col flex-grow"
+                    >
+                      <div className="relative aspect-square bg-gray-100">
+                        <img 
+                          src={product.image_url} 
+                          alt={product.name} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <div className="p-6 flex-grow">
+                        <h3 className="text-lg font-medium text-gray-900 group-hover:text-[#B49A5E] transition-colors mb-2 overflow-hidden">
+                          {product.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm line-clamp-2 overflow-hidden">
+                          {product.description}
                         </p>
-                      )}
-                        */}
-                    </div>
+                      </div>
                     </Link>
                   </div>
                 ))}
