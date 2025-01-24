@@ -24,22 +24,20 @@ interface ModalProps {
   isError?: boolean;
 }
 
+// Add the getCountryFromRegion function
+const getCountryFromRegion = (regionCode: string): string => {
+    switch (regionCode) {
+        case 'uae-en':
+            return 'ae'; // UAE
+        case 'omn-en':
+            return 'om'; // Oman
+        case 'ind-en':
+            return 'in'; // India
+        default:
+            return 'ae'; // Default to US for global-en
+    }
+};
 
-
-
-
-
-// const regionCode = location.pathname.split('/')[1];
-
-
-
-
-
-
-{/*const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
-const omanMap = "https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near";
-const indiaMap= "https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near";
-*/}
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, isError = false }) => {
   if (!isOpen) return null;
 
@@ -281,60 +279,51 @@ const Contact = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Phone</label>
-                  <div className="flex items-center">
-                   {/*} {formData.region_code != 'global-en' && <span className="mr-2 text-gray-600">{formData.dialCode}</span>}
-                   */}
-                   <div className="border border-gray-300 "> {/* Add box styles here */} 
-               <PhoneInput
-                country={'us'}
-                value={formData.phone}
-                onChange={(value) => setFormData({ ...formData, phone: value })}
-                placeholder="Enter phone number"
-                inputStyle={{
-                  width: '100%',
-                padding: '10px',
-                border: 'none',
-                borderRadius: '4px',
-                marginRight: '10px', // Space between dropdown and input
-              
-                position: 'relative', // Ensure positioning is relative
-                zIndex: 1,
-              }}
-              dropdownStyle={{
-                border: 'none',
-                borderRadius: '10px',
-                zIndex: 2,
-                position: 'absolute', // Position dropdown absolutely
-                top: '100%', // Position it below the input
-                left: '0',
-                right: '0',
-                
-              }}
-              inputClass="hidden-phone-input" // Add custom class
-                 />
-                 </div>
-                   <input
-        type="tel"
-        name="phone"
-        value={formData.phone}
-        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-        placeholder="Enter phone number"
-        required
-        className="w-full px-4 py-2 pl-12 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
-    />
-                 
-  {/*
+                  <div className="relative flex items-center">
+                    <div className="border-none"> 
+                      <PhoneInput
+                        country={getCountryFromRegion(formData.region_code)}
+                        value={formData.phone}
+                        onChange={(value) => setFormData({ ...formData, phone: value })}
+                        placeholder="Enter phone number"
+                        containerStyle={{
+                          border: 'none',
+                          background: 'transparent'
+                        }}
+                        inputStyle={{
+                          width: '100%',
+                          padding: '10px',
+                          border: 'none',
+                          background: 'transparent',
+                          marginRight: '10px',
+                          position: 'relative',
+                          zIndex: 1
+                        }}
+                        buttonStyle={{
+                          border: 'none',
+                          background: 'transparent',
+                          padding: '0'
+                        }}
+                        dropdownStyle={{
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px',
+                          zIndex: 2,
+                          marginTop: '4px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        inputClass="hidden-phone-input"
+                      />
+                    </div>
                     <input
                       type="tel"
                       name="phone"
-                      value={formData.phone.replace(/^[^0-9]+/, '')}
-                      onChange={handleInputChange}
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="Enter phone number"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
+                      className="w-full px-4 py-2 pl-12 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
                     />
-                    */}
                   </div>
-                
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message<span className="text-red-500">*</span></label>
