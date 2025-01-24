@@ -14,7 +14,7 @@ interface FormData {
   message: string;
   is_ok_receive_communication: boolean;
   region_code: string;
-  dialCode: string
+  countryCode: string;
 }
 
 interface ModalProps {
@@ -106,7 +106,7 @@ const Contact = () => {
     message: '',
     region_code: '',
     is_ok_receive_communication: false,
-    dialCode: ''
+    countryCode: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalState, setModalState] = useState({
@@ -189,7 +189,7 @@ const Contact = () => {
         message: '',
         region_code: currentRegion?.code || 'global-en',
         is_ok_receive_communication: false,
-        dialCode: dialCode
+        countryCode: ''
       });
 
     } catch (error) {
@@ -279,51 +279,70 @@ const Contact = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Phone</label>
-                  <div className="relative flex items-center">
-                    <div className="border-none"> 
+                  <div className="flex items-center space-x-2">
+                    <div className="w-32"> 
                       <PhoneInput
                         country={getCountryFromRegion(formData.region_code)}
-                        value={formData.phone}
-                        onChange={(value) => setFormData({ ...formData, phone: value })}
-                        placeholder="Enter phone number"
+                        value={formData.countryCode}
+                        onChange={(value) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            countryCode: value
+                          }));
+                        }}
+                        enableSearch={true}
                         containerStyle={{
-                          border: 'none',
-                          background: 'transparent'
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '4px',
                         }}
                         inputStyle={{
                           width: '100%',
-                          padding: '10px',
+                          height: '42px',
+                          background: '#f9fafb',
                           border: 'none',
-                          background: 'transparent',
-                          marginRight: '10px',
-                          position: 'relative',
-                          zIndex: 1
+                          borderRadius: '4px',
                         }}
                         buttonStyle={{
+                          background: '#f9fafb',
                           border: 'none',
-                          background: 'transparent',
-                          padding: '0'
+                          borderRight: '1px solid #e5e7eb',
+                          borderRadius: '4px 0 0 4px',
                         }}
                         dropdownStyle={{
+                          width: '300px',
                           border: '1px solid #e5e7eb',
-                          borderRadius: '8px',
-                          zIndex: 2,
+                          borderRadius: '4px',
                           marginTop: '4px',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                         }}
-                        inputClass="hidden-phone-input"
+                        searchStyle={{
+                          width: '100%',
+                          height: '36px',
+                          padding: '8px',
+                          margin: '0',
+                          borderRadius: '4px',
+                        }}
                       />
                     </div>
                     <input
                       type="tel"
                       name="phone"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) => {
+                        const phoneNumber = e.target.value.replace(/\D/g, '');
+                        setFormData(prev => ({
+                          ...prev,
+                          phone: phoneNumber
+                        }));
+                      }}
                       placeholder="Enter phone number"
                       required
-                      className="w-full px-4 py-2 pl-12 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E] bg-[#f9fafb]"
                     />
                   </div>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Select country code and enter phone number
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message<span className="text-red-500">*</span></label>
