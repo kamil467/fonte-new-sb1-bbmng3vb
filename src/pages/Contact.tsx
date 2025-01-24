@@ -34,7 +34,7 @@ const getCountryFromRegion = (regionCode: string): string => {
         case 'ind-en':
             return 'in'; // India
         default:
-            return 'ae'; // Default to US for global-en
+            return 'us'; // Default to US for global-en
     }
 };
 
