@@ -4,7 +4,8 @@ import { Region, supabase } from '../lib/supabase';
 import GoogleMap from '../components/GoogleMap';
 import { useLocation } from 'react-router-dom';
 import { getRegionIdFromCode, isValidRegionCode } from '../utils/regionUtils';
-
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 interface FormData {
   name: string;
@@ -70,7 +71,7 @@ const Contact = () => {
   {/**  Fetch Region Data */}
   const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
   const location = useLocation();
-
+  const [phone, setPhone] = useState('');
   useEffect(() => {
     fetchRegionData();
   }, [location.pathname]);
@@ -256,7 +257,8 @@ const Contact = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name <span className="text-red-500">*</span></label>
+             <label className="block text-sm font-medium text-gray-700 mb-2">Name <span className="text-red-500">*</span></label>
+           
                   <input
                     type="text"
                     name="name"
@@ -280,7 +282,48 @@ const Contact = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Phone</label>
                   <div className="flex items-center">
-                    {formData.region_code != 'global-en' && <span className="mr-2 text-gray-600">{formData.dialCode}</span>}
+                   {/*} {formData.region_code != 'global-en' && <span className="mr-2 text-gray-600">{formData.dialCode}</span>}
+                   */}
+                   <div className="border border-gray-300 "> {/* Add box styles here */} 
+               <PhoneInput
+                country={'us'}
+                value={formData.phone}
+                onChange={(value) => setFormData({ ...formData, phone: value })}
+                placeholder="Enter phone number"
+                inputStyle={{
+                  width: '100%',
+                padding: '10px',
+                border: 'none',
+                borderRadius: '4px',
+                marginRight: '10px', // Space between dropdown and input
+              
+                position: 'relative', // Ensure positioning is relative
+                zIndex: 1,
+              }}
+              dropdownStyle={{
+                border: 'none',
+                borderRadius: '10px',
+                zIndex: 2,
+                position: 'absolute', // Position dropdown absolutely
+                top: '100%', // Position it below the input
+                left: '0',
+                right: '0',
+                
+              }}
+              inputClass="hidden-phone-input" // Add custom class
+                 />
+                 </div>
+                   <input
+        type="tel"
+        name="phone"
+        value={formData.phone}
+        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+        placeholder="Enter phone number"
+        required
+        className="w-full px-4 py-2 pl-12 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
+    />
+                 
+  {/*
                     <input
                       type="tel"
                       name="phone"
@@ -289,7 +332,9 @@ const Contact = () => {
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
                     />
+                    */}
                   </div>
+                
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message<span className="text-red-500">*</span></label>
