@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Box, ChevronDown, ChevronRight, ChevronUp, FolderOpen, Home, Store, Tag } from 'lucide-react';
 import { supabase, Category, SubCategory, Product, RegionCategoryMapping, RegionSubCategoryMapping, RegionProductMapping } from '../lib/supabase';
+
 
 interface FilterGroup {
   name: string;
@@ -297,6 +298,91 @@ const Products = ({productGridRef}) => {
       </div>
  
       {/* Main Content */}
+
+ {/* Breadcrumb Navigation */}
+ <nav className="py-3 md:py-6 bg-gradient-to-r from-gray-50 via-white to-gray-50">
+        {/* Desktop Breadcrumb */}
+        <div className="hidden md:block container mx-auto px-4">
+          <div className="flex items-center space-x-3 text-base">
+            <Link 
+              to={`/${regionCode || ''}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+            >
+              <Home className="w-5 h-5 mr-2" />
+              <span>Home</span>
+            </Link>
+          
+            <span className="text-gray-400">
+              <ChevronRight className="w-5 h-5" />
+            </span>
+
+            <Link 
+              to={`/${regionCode || ''}/products/${categorySlug}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+            >
+              <Store className="w-5 h-5 mr-2" />
+              <span>{categorySlug}</span>
+            </Link>
+
+            {subcategorySlug && (
+              <>
+                <span className="text-gray-400">
+                  <ChevronRight className="w-5 h-5" />
+                </span>
+                <Link 
+                    to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
+                >
+                  <FolderOpen className="w-5 h-5 mr-2" />
+                  <span>{subcategorySlug}</span>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Breadcrumb */}
+        <div className="md:hidden container mx-auto px-4">
+          <div className="flex flex-wrap items-center gap-1.5 text-sm">
+            <Link 
+               to={`/${regionCode || ''}`} 
+              className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200"
+            >
+              <Home className="w-4 h-4" />
+            </Link>
+
+            <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+
+
+            {categorySlug && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                <Link 
+                   to={`/${regionCode || ''}/products/${categorySlug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 bg-gray-50 px-2 py-0.5 rounded-full text-xs"
+                >
+                  {categorySlug}
+                </Link>
+              </>
+            )}
+
+       {subcategorySlug && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                <Link 
+                   to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}`} 
+                  className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 bg-gray-50 px-2 py-0.5 rounded-full text-xs"
+                >
+                  {subcategorySlug}
+                </Link>
+              </>
+            )}
+
+
+          </div>
+        </div>
+      </nav>
+
       <div   className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col justify-center items-center md:flex-row gap-8">
           {/* Filters Sidebar - only visible on desktop */}
@@ -348,7 +434,15 @@ const Products = ({productGridRef}) => {
           </div>
           */}
 
+
+  
+
+
+
           {/* Products Grid */}
+
+       
+    
           <div className="w-full flex-col  flex justify-center items-center md:w-3/4 ">
             {loading ? (
               <div className="flex justify-center items-center h-64">
@@ -391,6 +485,8 @@ const Products = ({productGridRef}) => {
             )}
            
           </div>
+
+          
         </div>
       </div>
     </div>
