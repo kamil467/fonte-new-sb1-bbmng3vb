@@ -838,7 +838,7 @@ const Navbar = ({productGridRef}) => {
                               )}
                             </Link>
                             {getSubCategories(category.id).length > 0 && (
-                              <div className="absolute left-full top-0 w-64 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover/category:opacity-100 group-hover/category:visible transition-all duration-200">
+                              <div className="absolute right-full top-0 w-64 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover/category:opacity-100 group-hover/category:visible transition-all duration-200">
                                 <div className="py-2">
                                   {getSubCategories(category.id).map((subCategory) => (
                                     <Link
@@ -857,12 +857,14 @@ const Navbar = ({productGridRef}) => {
                                     </Link>
                                   ))}
                                   <div className="border-t my-2"></div>
+                                  {/** 
                                   <Link hidden={true}
                                     to={getCategoryUrl(category.slug)}
                                     className="flex items-center px-4 py-2 text-sm font-medium text-[#B49A5E] hover:text-[#8B7B4B]"
                                   >
                                     Shop All
                                   </Link>
+                                  Shop All */} 
                                 </div>
                               </div>
                             )}
