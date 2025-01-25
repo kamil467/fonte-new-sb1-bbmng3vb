@@ -298,11 +298,14 @@ const Navbar = ({productGridRef}) => {
   };
 
   const toggleMobileCategory = (categoryId: number) => {
+    toggleCategoryToOpenCloseMobile(categoryId);
     setOpenMobileCategories(prev => 
       prev.includes(categoryId) 
         ? prev.filter(id => id !== categoryId)
         : [...prev, categoryId]
     );
+    {/** TODO: Implement toggleCategoryToOpenCloseMobile */}
+    
   };
 
   const handleMenuClick = () => {
@@ -314,6 +317,18 @@ const Navbar = ({productGridRef}) => {
   const isCategoryActive = (categorySlug: string) => {
     return location.pathname.includes(`/products/${categorySlug}`);
   };
+
+  {/** ToggleCategory For Mobile  */}
+  const [openCategoryId, setOpenCategoryId] = useState(null);
+  const toggleCategoryToOpenCloseMobile = (id) => {
+    console.log("toggleCategoryToOpenCloseMobile", id);
+    // If the clicked category is already open, close it
+    if (openCategoryId === id) {
+        setOpenCategoryId(null);
+    } else {
+        setOpenCategoryId(id); // Open the clicked category
+    }
+};
 
   // Mobile Navigation Overlay
   const MobileNav = () => (
@@ -412,9 +427,11 @@ const Navbar = ({productGridRef}) => {
                     }`}
                   />
                 </button>
-                {isOpen && (
+                {openCategoryId === category.id &&  (
                   <div className="bg-gray-50">
-                    {categorySubcategories.map((subcategory) => (
+                    
+                    {
+                    categorySubcategories.map((subcategory) => (
                       <Link
                         key={subcategory.id}
                         to={`/${selectedRegion?.code || ''}/products/${category.slug}/${subcategory.slug}`}
