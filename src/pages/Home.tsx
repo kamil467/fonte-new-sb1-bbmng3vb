@@ -1,11 +1,59 @@
 import GoogleMap from '../components/GoogleMap';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { supabase, Category, RegionCategoryMapping } from '../lib/supabase';
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
+  const [firstCategory, setFirstCategory] = useState<Category | null>(null);
+  const location = useLocation();
+  const regionCode = location.pathname.split('/')[1];
+
+  // Fetch first available category for the region
+  useEffect(() => {
+    const fetchFirstCategory = async () => {
+      try {
+        // Get region ID based on code
+        const { data: regions } = await supabase
+          .from('regions')
+          .select('id')
+          .eq('code', regionCode)
+          .single();
+
+        if (regions) {
+          // Get categories mapped to this region
+          const { data: mappings } = await supabase
+            .from('region_category_mapping')
+            .select('category_id')
+            .eq('region_id', regions.id)
+            .order('id')
+
+          if (mappings && mappings.length > 0) {
+            // Get the category details
+            const { data: category } = await supabase
+              .from('categories')
+              .select('*')
+              .in('id', mappings.map(mapping => mapping.category_id))
+              .order('order_index')
+              .limit(1)
+              .single();
+
+            if (category) {
+              setFirstCategory(category);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching first category:', error);
+      }
+    };
+
+    if (regionCode) {
+      fetchFirstCategory();
+    }
+  }, [regionCode]);
 
   // Auto-advance testimonials
   useEffect(() => {
@@ -16,7 +64,6 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const regionCode = location.pathname.split('/')[1];
   const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
   const omanMap = "https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near";
   const indiaMap= "https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near";
@@ -105,7 +152,7 @@ const Home = () => {
               Explore Our Proudly Collection
             </h2>
             <Link 
-              to="/products" 
+              to={`/${regionCode}/products${firstCategory ? `/${firstCategory.slug}` : ''}`}
               className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full hover:bg-[#776944] transition-colors"
             >
               View More
