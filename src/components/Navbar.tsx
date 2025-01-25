@@ -311,6 +311,10 @@ const Navbar = ({productGridRef}) => {
     setTimeout(() => setMenuButtonPressed(false), 200);
   };
 
+  const isCategoryActive = (categorySlug: string) => {
+    return location.pathname.includes(`/products/${categorySlug}`);
+  };
+
   // Mobile Navigation Overlay
   const MobileNav = () => (
     <div
@@ -401,7 +405,7 @@ const Navbar = ({productGridRef}) => {
                   }`}
                   onClick={() => toggleMobileCategory(category.id)}
                 >
-                  <span className="text-lg font-medium">{category.name}</span>
+                  <span className={`text-lg font-medium ${isCategoryActive(category.slug) && window.innerWidth >= 1024 ? 'text-[#B49A5E]' : ''}`}>{category.name}</span>
                   <ChevronDown 
                     className={`w-5 h-5 transform transition-transform text-[#B49A5E] ${
                       isOpen ? 'rotate-180' : ''
@@ -545,7 +549,7 @@ const Navbar = ({productGridRef}) => {
                   </>
                 )}
               </button>
-              {isRegionDropdownOpen && !loading && (
+              {isRegionDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
                   <div className="py-2">
                     {regions.map((region) => (
@@ -710,7 +714,9 @@ const Navbar = ({productGridRef}) => {
                 <div key={category.id} className="group relative">
                   <Link 
                     to={getCategoryUrl(category.slug)} 
-                    className={`text-sm font-medium hover:text-gray-600 hover:border-b-2 hover:border-[#B49A5E] whitespace-nowrap px-4 py-2`}
+                    className={`text-sm font-medium hover:text-gray-600 hover:border-b-2 hover:border-[#B49A5E] whitespace-nowrap px-4 py-2 ${
+                      isCategoryActive(category.slug) && window.innerWidth >= 1024 ? 'text-[#B49A5E]' : ''
+                    }`}
                   >
                     {category.name}
                   </Link>
@@ -803,7 +809,9 @@ const Navbar = ({productGridRef}) => {
                           <div key={category.id} className="group/category relative">
                             <Link 
                               to={getCategoryUrl(category.slug)}
-                              className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                              className={`flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 ${
+                                isCategoryActive(category.slug) ? 'text-[#B49A5E]' : '' && window.innerWidth >= 1024
+                              }`}
                             >
                               {category.name}
                               {getSubCategories(category.id).length > 0 && (
