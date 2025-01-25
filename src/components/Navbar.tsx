@@ -621,8 +621,11 @@ const Navbar = ({productGridRef}) => {
               <Link to={`/${selectedRegion?.code || ''}/contact`}  className="flex items-center  hover:text-[#B49A5E]">
                 Free Consultation
               </Link>
-              <Link to="/tools" className="flex items-center  hover:text-[#B49A5E]">
-                Tools & Guides
+              <Link 
+                to={`/${selectedRegion?.code || ''}/projects`}
+                className="flex items-center  hover:text-[#B49A5E]"
+              >
+                Projects
               </Link>
               <Link to={`/${selectedRegion?.code || ''}/expertise`} className="flex items-center  hover:text-[#B49A5E]">
                 Expertise
@@ -782,12 +785,7 @@ const Navbar = ({productGridRef}) => {
                   )}
                 </div>
               ))}
-              <Link 
-                to="/projects"
-                className="text-sm font-medium hover:text-gray-600 whitespace-nowrap px-4"
-              >
-                PROJECTS
-              </Link>
+             
               <div className="relative group">
                 <button 
                   className="text-sm font-medium hover:text-gray-600 whitespace-nowrap px-4 flex items-center"

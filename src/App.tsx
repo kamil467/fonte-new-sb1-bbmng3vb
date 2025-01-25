@@ -10,6 +10,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import ScrollToTop from './components/ScrollToTop';
 import { RegionCode, isValidRegionCode } from './utils/regionUtils';
+import Projects from './pages/Projects';
 
 const RegionRoute: React.FC<{
   element: React.ReactNode;
@@ -61,6 +62,7 @@ function App() {
           <Route path="/:region/expertise" element={<RegionRoute element={<Expertise />} path="/expertise" />} />
           <Route path="/:region/about" element={<RegionRoute element={<About />} path="/about" />} />
           <Route path="/:region/contact" element={<RegionRoute element={<Contact />} path="/contact" />} />
+          <Route path="/:region/projects" element={<RegionRoute element={<Projects />} path="/projects" />} />
           <Route path="*" element={<Navigate to="/global-en" replace />} />
         </Routes>
         <Footer />
