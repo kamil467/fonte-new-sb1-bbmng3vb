@@ -415,9 +415,9 @@ const Navbar = ({productGridRef}) => {
             return (
               <div key={category.id} className="border-b border-gray-100 last:border-b-0">
                 <button
-                  className={`flex items-center justify-between w-full p-4 text-left hover:bg-gray-50 transition-colors ${
-                    isOpen ? 'text-[#B49A5E]' : ''
-                  }`}
+                   className={`w-full text-left px-3 py-2 text-base font-medium ${
+                    openCategoryId === category.id ? 'text-[#B49A5E]' : 'text-gray-700'
+                } hover:text-gray-900 hover:bg-gray-50`}
                   onClick={() => toggleMobileCategory(category.id)}
                 >
                   <span className={`text-lg font-medium ${isCategoryActive(category.slug) && window.innerWidth >= 1024 ? 'text-[#B49A5E]' : ''}`}>{category.name}</span>
