@@ -4,7 +4,8 @@ import { Region, supabase } from '../lib/supabase';
 import GoogleMap from '../components/GoogleMap';
 import { useLocation } from 'react-router-dom';
 import { getRegionIdFromCode, isValidRegionCode } from '../utils/regionUtils';
-
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 interface FormData {
   name: string;
@@ -13,7 +14,7 @@ interface FormData {
   message: string;
   is_ok_receive_communication: boolean;
   region_code: string;
-  dialCode: string
+  countryCode: string;
 }
 
 interface ModalProps {
@@ -23,22 +24,20 @@ interface ModalProps {
   isError?: boolean;
 }
 
+// Add the getCountryFromRegion function
+const getCountryFromRegion = (regionCode: string): string => {
+    switch (regionCode) {
+        case 'uae-en':
+            return 'ae'; // UAE
+        case 'omn-en':
+            return 'om'; // Oman
+        case 'ind-en':
+            return 'in'; // India
+        default:
+            return 'us'; // Default to US for global-en
+    }
+};
 
-
-
-
-
-// const regionCode = location.pathname.split('/')[1];
-
-
-
-
-
-
-{/*const uaeMap = "https://maps.google.com/maps?q=FONTE%20GENERAL%20TRADING%20LLC&t=m&z=10&output=embed&iwloc=near";
-const omanMap = "https://maps.google.com/maps?q=BLUE%20BIRD%20TRAVELS%20-%20SEEB&t=m&z=8&output=embed&iwloc=near";
-const indiaMap= "https://maps.google.com/maps?q=Robodigx&t=m&z=8&output=embed&iwloc=near";
-*/}
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, isError = false }) => {
   if (!isOpen) return null;
 
@@ -70,7 +69,7 @@ const Contact = () => {
   {/**  Fetch Region Data */}
   const [currentRegion, setCurrentRegion] = useState<Region | null>(null);
   const location = useLocation();
-
+  const [phone, setPhone] = useState('');
   useEffect(() => {
     fetchRegionData();
   }, [location.pathname]);
@@ -107,7 +106,7 @@ const Contact = () => {
     message: '',
     region_code: '',
     is_ok_receive_communication: false,
-    dialCode: ''
+    countryCode: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalState, setModalState] = useState({
@@ -190,7 +189,7 @@ const Contact = () => {
         message: '',
         region_code: currentRegion?.code || 'global-en',
         is_ok_receive_communication: false,
-        dialCode: dialCode
+        countryCode: ''
       });
 
     } catch (error) {
@@ -256,7 +255,8 @@ const Contact = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name <span className="text-red-500">*</span></label>
+             <label className="block text-sm font-medium text-gray-700 mb-2">Name <span className="text-red-500">*</span></label>
+           
                   <input
                     type="text"
                     name="name"
@@ -279,17 +279,70 @@ const Contact = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Phone</label>
-                  <div className="flex items-center">
-                    {formData.region_code != 'global-en' && <span className="mr-2 text-gray-600">{formData.dialCode}</span>}
+                  <div className="flex items-center space-x-2">
+                    <div className="w-32"> 
+                      <PhoneInput
+                        country={getCountryFromRegion(formData.region_code)}
+                        value={formData.countryCode}
+                        onChange={(value) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            countryCode: value
+                          }));
+                        }}
+                        enableSearch={true}
+                        containerStyle={{
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '4px',
+                        }}
+                        inputStyle={{
+                          width: '100%',
+                          height: '42px',
+                          background: '#f9fafb',
+                          border: 'none',
+                          borderRadius: '4px',
+                        }}
+                        buttonStyle={{
+                          background: '#f9fafb',
+                          border: 'none',
+                          borderRight: '1px solid #e5e7eb',
+                          borderRadius: '4px 0 0 4px',
+                        }}
+                        dropdownStyle={{
+                          width: '300px',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        }}
+                        searchStyle={{
+                          width: '100%',
+                          height: '36px',
+                          padding: '8px',
+                          margin: '0',
+                          borderRadius: '4px',
+                        }}
+                      />
+                    </div>
                     <input
                       type="tel"
                       name="phone"
-                      value={formData.phone.replace(/^[^0-9]+/, '')}
-                      onChange={handleInputChange}
+                      value={formData.phone}
+                      onChange={(e) => {
+                        const phoneNumber = e.target.value.replace(/\D/g, '');
+                        setFormData(prev => ({
+                          ...prev,
+                          phone: phoneNumber
+                        }));
+                      }}
+                      placeholder="Enter phone number"
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E]"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-[#B49A5E] focus:border-[#B49A5E] bg-[#f9fafb]"
                     />
                   </div>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Select country code and enter phone number
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message<span className="text-red-500">*</span></label>

@@ -135,8 +135,16 @@ const Footer = () => {
         </div>
       </div>
 
+      <div className="flex flex-col items-center border-t border-gray-800">
+
+      <div className="flex justify-between items-center w-full px-4 py-4 ">
+      {currentRegion?.gst_vat_registration_no && (
+      <span className="text-gray-400 text-sm hover:text-[#B49A5E]"> {currentRegion?.code == 'ind-en'? 'GST TIN:' : 'VAT:'} {currentRegion.gst_vat_registration_no}</span>
+    )}
+      </div>
+     
       {/* Social Links */}
-      <div className="flex items-center justify-center space-x-4 mt-6 pt-4 border-t border-gray-800">
+      <div className="flex items-center justify-center space-x-4">
         <a href="https://www.facebook.com/fonteid" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#B49A5E]">
           <FacebookIcon size={20} />
         </a>
@@ -153,6 +161,13 @@ const Footer = () => {
       <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
         <p>&copy; {new Date().getFullYear()} Fonte General Trading LLC. All rights reserved.</p>
       </div>
+
+
+        </div>
+
+
+
+
     </footer>
   );
 };
