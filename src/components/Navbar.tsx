@@ -602,7 +602,7 @@ const Navbar = ({productGridRef}) => {
       {/* Main Navigation */}
       <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16">
             {/* Mobile Menu Button */}
             <button 
               onClick={handleMenuClick}
@@ -637,7 +637,7 @@ const Navbar = ({productGridRef}) => {
             </div>
            */}
             {/* Navigation Links */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-8 text-sm">
              
               <Link to={`/${selectedRegion?.code || ''}/contact`}  className="flex items-center  hover:text-[#B49A5E]">
                 Free Consultation
@@ -726,7 +726,7 @@ const Navbar = ({productGridRef}) => {
 
           {/* Desktop Categories Menu */}
           {!loading ? (
-            <div className="hidden md:flex justify-between items-center py-4 border-t">
+            <div className="hidden md:flex justify-between items-center py-2 border-t">
               {getVisibleCategories().map((category) => (
                 <div key={category.id} className="group relative">
                   <Link 
