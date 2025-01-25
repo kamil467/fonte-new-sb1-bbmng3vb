@@ -321,7 +321,8 @@ const Products = ({productGridRef}) => {
               className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
             >
               <Store className="w-5 h-5 mr-2" />
-              <span>{categorySlug}</span>
+            
+              <span>{categories.find(c => c.slug === categorySlug)?.name}</span>
             </Link>
 
             {subcategorySlug && (
@@ -334,7 +335,7 @@ const Products = ({productGridRef}) => {
                   className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 flex items-center"
                 >
                   <FolderOpen className="w-5 h-5 mr-2" />
-                  <span>{subcategorySlug}</span>
+                  <span>{subcategories.find(c => c.slug === subcategorySlug)?.name}</span>
                 </Link>
               </>
             )}
@@ -361,7 +362,7 @@ const Products = ({productGridRef}) => {
                    to={`/${regionCode || ''}/products/${categorySlug}`} 
                   className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 bg-gray-50 px-2 py-0.5 rounded-full text-xs"
                 >
-                  {categorySlug}
+                  {categories.find(c => c.slug === categorySlug)?.name}
                 </Link>
               </>
             )}
@@ -373,7 +374,7 @@ const Products = ({productGridRef}) => {
                    to={`/${regionCode || ''}/products/${categorySlug}/${subcategorySlug}`} 
                   className="text-gray-500 hover:text-[#B49A5E] transition-colors duration-200 bg-gray-50 px-2 py-0.5 rounded-full text-xs"
                 >
-                  {subcategorySlug}
+                  {subcategories.find(c => c.slug === subcategorySlug)?.name}
                 </Link>
               </>
             )}
