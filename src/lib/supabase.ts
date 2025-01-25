@@ -99,6 +99,7 @@ export interface Region
   icon_url: string;
   enable_business_hours: boolean;
   business_hours: string;
+  gst_vat_registration_no : string;
 }
 export interface RegionCategoryMapping
 {
