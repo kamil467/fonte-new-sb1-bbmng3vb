@@ -478,6 +478,10 @@ const Products = ({productGridRef}) => {
                         <p className="text-gray-600 text-sm line-clamp-3">
                           {product.description}
                         </p>
+                     {/*   <p className="text-gray-800 font-bold group-hover:text-[#B49A5E] transition-colors">
+                         Starting from ${product.price}
+                        </p>
+                        **/}
                       </div>
                     </Link>
                   </div>
