@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import { ChevronRight, Maximize2, ChevronDown, ChevronUp, Phone, Home, Store, FolderOpen, Tag, Box } from 'lucide-react';
+import { ChevronRight, Maximize2, ChevronDown, ChevronUp, Phone, Home, Store, FolderOpen, Tag, Box, Ruler, X } from 'lucide-react';
 import { supabase, Product, ProductColor, ProductCareInstruction, Region } from '../lib/supabase';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
 interface TabProps {
   title: string;
@@ -46,6 +48,458 @@ const Tab: React.FC<TabProps> = ({ title, active, onClick, children, isMobile = 
   );
 };
 
+interface RoomDimensions {
+  width: number;
+  height: number;
+  length: number;
+}
+
+const ROOM_BACKGROUNDS = [
+  '/room-templates/living-room-1.jpeg',
+  '/room-templates/living-room-2.jpeg',
+  '/room-templates/living-room-3.avif',
+  '/room-templates/living-room-4.jpg'
+];
+
+const Modal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}> = ({ isOpen, onClose, children }) => {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsAnimating(true);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 overflow-y-auto"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        {/* Background overlay */}
+        <div 
+          className={`fixed inset-0 transition-opacity bg-gray-500 ${
+            isAnimating ? 'opacity-75' : 'opacity-0'
+          }`} 
+          aria-hidden="true"
+          onClick={onClose}
+        />
+
+        {/* This element is to trick the browser into centering the modal contents. */}
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        {/* Modal panel */}
+        <div 
+          className={`inline-block w-full max-w-6xl px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:p-6 ${
+            isAnimating 
+              ? 'opacity-100 translate-y-0 sm:scale-100' 
+              : 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+          }`}
+        >
+          <div className="absolute top-0 right-0 pt-4 pr-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded-md"
+            >
+              <span className="sr-only">Close</span>
+              <X className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="mt-2">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RoomVisualizer: React.FC<{ 
+  productDimensions: { width: number; height: number; length: number };
+  productImage: string;
+}> = ({ productDimensions, productImage }) => {
+  const [selectedRoom, setSelectedRoom] = useState(ROOM_BACKGROUNDS[0]);
+  const [roomDimensions, setRoomDimensions] = useState({ width: 400, height: 300, length: 400 });
+  const [showResult, setShowResult] = useState(false);
+  const [productPosition, setProductPosition] = useState({ x: 300, y: 200 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fitResult, setFitResult] = useState<{ fits: boolean; message: string } | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Check if product fits in room
+  const checkProductFit = () => {
+    const fits = 
+      productDimensions.width <= roomDimensions.width &&
+      productDimensions.height <= roomDimensions.height &&
+      productDimensions.length <= roomDimensions.length;
+
+    const message = fits 
+      ? "Product fits in the room!"
+      : "Product is too large for the room dimensions.";
+
+    setFitResult({ fits, message });
+    setShowResult(true);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setRoomDimensions(prev => ({ ...prev, [name]: parseFloat(value) || 0 }));
+  };
+
+  const drawRoom = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      console.error('Canvas ref is null');
+      return;
+    }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('Could not get 2D context');
+      return;
+    }
+
+    // Update canvas size based on container
+    if (containerRef.current) {
+      const container = containerRef.current;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    }
+
+    console.log('Drawing room with background:', selectedRoom);
+    console.log('Product image URL:', productImage);
+
+    // Clear the canvas first
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Load room background
+    const roomImg = new Image();
+    
+    roomImg.onload = () => {
+      console.log('Room image loaded successfully:', selectedRoom);
+      // Draw room with proper scaling
+      const scale = Math.min(canvas.width / roomImg.width, canvas.height / roomImg.height);
+      const scaledWidth = roomImg.width * scale;
+      const scaledHeight = roomImg.height * scale;
+      const x = (canvas.width - scaledWidth) / 2;
+      const y = (canvas.height - scaledHeight) / 2;
+      
+      ctx.drawImage(roomImg, x, y, scaledWidth, scaledHeight);
+
+      if (showResult && productImage && fitResult?.fits) {
+        console.log('Loading product image:', productImage);
+        
+        // Load and draw product
+        const productImg = new Image();
+        
+        productImg.onload = () => {
+          console.log('Product image loaded successfully');
+          
+          // Calculate scale based on room dimensions
+          // Assuming 1 meter in room = 100 pixels in canvas
+          const PIXELS_PER_METER = 100;
+          const roomWidthInPixels = roomDimensions.width * (PIXELS_PER_METER / 100);
+          const scale = roomWidthInPixels / productDimensions.width;
+          
+          // Calculate product dimensions in pixels
+          const productWidth = productDimensions.width * scale;
+          const productHeight = (productImg.height / productImg.width) * productWidth;
+          
+          // Ensure product position is within canvas bounds
+          const x = Math.min(Math.max(productPosition.x, productWidth/2), canvas.width - productWidth/2);
+          const y = Math.min(Math.max(productPosition.y, productHeight/2), canvas.height - productHeight/2);
+          
+          // Draw a shadow under the product
+          ctx.save();
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+          ctx.shadowBlur = 10;
+          ctx.shadowOffsetX = 5;
+          ctx.shadowOffsetY = 5;
+          
+          ctx.drawImage(
+            productImg,
+            x - productWidth/2,
+            y - productHeight/2,
+            productWidth,
+            productHeight
+          );
+          
+          ctx.restore();
+          
+          // Draw guidelines
+          if (isDragging) {
+            ctx.save();
+            ctx.strokeStyle = '#4CAF50';
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        };
+
+        productImg.onerror = (e) => {
+          console.error('Error loading product image:', e);
+          console.error('Failed product image URL:', productImg.src);
+          ctx.fillStyle = '#ff000033';
+          ctx.fillRect(
+            productPosition.x - 50,
+            productPosition.y - 50,
+            100,
+            100
+          );
+          ctx.fillStyle = '#ff0000';
+          ctx.font = '12px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Image Load Error', productPosition.x, productPosition.y);
+        };
+
+        productImg.src = productImage;
+      }
+    };
+
+    roomImg.onerror = (e) => {
+      console.error('Error loading room image:', e, selectedRoom);
+      ctx.fillStyle = '#f0f0f0';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#666';
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Error loading room image', canvas.width/2, canvas.height/2);
+    };
+
+    roomImg.src = selectedRoom;
+  };
+
+  // Handle mouse/touch events for product positioning
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!showResult) return;
+    setIsDragging(true);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    setProductPosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDragging || !showResult) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    setProductPosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Toggle fullscreen
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+    // Redraw after state update and layout changes
+    setTimeout(() => {
+      drawRoom();
+    }, 100);
+  };
+
+  useEffect(() => {
+    drawRoom();
+  }, [selectedRoom, showResult, productPosition, isFullscreen]);
+
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-medium">Room Fit Checker</h3>
+        <button
+          onClick={toggleFullscreen}
+          className="p-2 hover:bg-gray-100 rounded-full"
+          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+        >
+          <Maximize2 className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Room Template</label>
+              <select
+                value={selectedRoom}
+                onChange={(e) => setSelectedRoom(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+              >
+                <option value="/room-templates/living-room-1.jpeg">Living Room 1</option>
+                <option value="/room-templates/living-room-2.jpeg">Living Room 2</option>
+                <option value="/room-templates/living-room-3.avif">Living Room 3</option>
+                <option value="/room-templates/living-room-4.jpg">Living Room 4</option>
+              </select>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Room Width (cm)</label>
+                <input
+                  type="number"
+                  value={roomDimensions.width}
+                  onChange={(e) => setRoomDimensions(prev => ({ ...prev, width: Number(e.target.value) }))}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Room Length (cm)</label>
+                <input
+                  type="number"
+                  value={roomDimensions.length}
+                  onChange={(e) => setRoomDimensions(prev => ({ ...prev, length: Number(e.target.value) }))}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Room Height (cm)</label>
+                <input
+                  type="number"
+                  value={roomDimensions.height}
+                  onChange={(e) => setRoomDimensions(prev => ({ ...prev, height: Number(e.target.value) }))}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Product Dimensions</label>
+              <div className="text-sm text-gray-600">
+                <p>Width: {productDimensions.width} cm</p>
+                <p>Length: {productDimensions.length} cm</p>
+                <p>Height: {productDimensions.height} cm</p>
+              </div>
+            </div>
+
+            <button
+              onClick={checkProductFit}
+              className="w-full bg-[#B49A5E] text-white px-8 py-3 rounded hover:bg-[#776944]"
+            >
+              Check Fit
+            </button>
+
+            {fitResult && (
+              <div className={`p-4 rounded-md ${fitResult.fits ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                {fitResult.message}
+                {fitResult.fits && (
+                  <p className="text-sm mt-2">You can now drag the product in the room visualization!</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div 
+            ref={containerRef}
+            className={`relative bg-gray-100 rounded-lg overflow-hidden ${
+              isFullscreen ? 'h-screen' : 'h-[600px]'
+            }`}
+          >
+            <canvas
+              ref={canvasRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain'
+              }}
+            />
+            {showResult && fitResult?.fits && (
+              <div className="absolute bottom-4 left-4 right-4 text-center bg-black bg-opacity-50 text-white p-2 rounded">
+                Drag to position the product in the room
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface RoomDimensions {
+  width: number;
+  height: number;
+  length: number;
+}
+
+const Room: React.FC<{
+  dimensions: { width: number; height: number; length: number };
+  productDimensions: { width: number; height: number; length: number };
+  showProduct: boolean;
+}> = ({ dimensions, productDimensions, showProduct }) => {
+  return (
+    <>
+      {/* Room walls */}
+      <mesh position={[0, dimensions.height / 2, 0]}>
+        <boxGeometry args={[dimensions.width, dimensions.height, dimensions.length]} />
+        <meshStandardMaterial color="#f0f0f0" transparent opacity={0.2} />
+      </mesh>
+
+      {/* Floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+        <planeGeometry args={[dimensions.width, dimensions.length]} />
+        <meshStandardMaterial color="#e0e0e0" />
+      </mesh>
+
+      {/* Product */}
+      {showProduct && (
+        <mesh position={[0, productDimensions.height / 2, 0]}>
+          <boxGeometry 
+            args={[productDimensions.width, productDimensions.height, productDimensions.length]} 
+          />
+          <meshStandardMaterial color="#4a90e2" transparent opacity={0.6} />
+        </mesh>
+      )}
+    </>
+  );
+};
+
+const Scene: React.FC<{
+  roomDimensions: { width: number; height: number; length: number };
+  productDimensions: { width: number; height: number; length: number };
+  showProduct: boolean;
+}> = ({ roomDimensions, productDimensions, showProduct }) => {
+  return (
+    <Canvas style={{ width: '100%', height: '400px', background: '#f5f5f5' }}>
+      <PerspectiveCamera makeDefault position={[10, 10, 10]} />
+      <OrbitControls enableDamping />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
+      <Room 
+        dimensions={roomDimensions}
+        productDimensions={productDimensions}
+        showProduct={showProduct}
+      />
+    </Canvas>
+  );
+};
+
 const ProductDetail: React.FC = () => {
   const { productSlug } = useParams<{ productSlug: string }>();
   const location = useLocation();
@@ -60,6 +514,7 @@ const ProductDetail: React.FC = () => {
   const [colors, setColors] = useState<ProductColor[]>([]);
   const [careInstructions, setCareInstructions] = useState<ProductCareInstruction[]>([]);
   const [region, setRegion] = useState<Region | null>(null);
+  const [isRoomVisualizerOpen, setIsRoomVisualizerOpen] = useState(false);
 
   useEffect(() => {
     fetchProductDetails();
@@ -128,6 +583,22 @@ const ProductDetail: React.FC = () => {
     }
   };
 
+  const getProductImageUrl = (imageUrl: string) => {
+    if (!imageUrl) return '';
+    
+    // If it's already a full URL, return it
+    if (imageUrl.startsWith('http')) {
+      return imageUrl;
+    }
+    
+    // If it's a Supabase storage path, get the public URL
+    const { data } = supabase.storage
+      .from('products')
+      .getPublicUrl(imageUrl);
+      
+    return data?.publicUrl || '';
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-24">
@@ -178,8 +649,15 @@ const ProductDetail: React.FC = () => {
 
   const selectedImage = colors.find(c => c.color_code === selectedColor)?.image_url;
 
+  // Add default product dimensions (you can update these later with actual values from Supabase)
+  const defaultProductDimensions = {
+    width: 100,  // cm
+    height: 150, // cm
+    length: 50   // cm
+  };
+
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-4 py-8">
       {/* Breadcrumb Navigation */}
       <nav className="py-3 md:py-6 bg-gradient-to-r from-gray-50 via-white to-gray-50">
         {/* Desktop Breadcrumb */}
@@ -302,15 +780,24 @@ const ProductDetail: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Left Column - Images */}
         <div>
-          <div className="relative aspect-[4/3] bg-gray-100 mb-4 overflow-hidden">
+          <div className="relative">
             <img
-              src={selectedImage}
+              src={selectedImage || product.image_url}
               alt={product.name}
-              className="w-full h-full object-contain"
+              className="w-full rounded-lg"
             />
-            <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-lg">
-              <Maximize2 className="w-5 h-5" />
-            </button>
+            <div className="absolute bottom-4 right-4 flex gap-2">
+              <button
+                onClick={() => setIsRoomVisualizerOpen(true)}
+                className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-colors group relative"
+                title="Check Room Fit"
+              >
+                <Ruler className="w-6 h-6 text-gray-700 group-hover:text-primary transition-colors" />
+                <span className="absolute bottom-full right-0 mb-2 hidden group-hover:block whitespace-nowrap bg-gray-900 text-white text-sm py-1 px-2 rounded">
+                  Check Room Fit
+                </span>
+              </button>
+            </div>
           </div>
 
           {/* Color Variants */}
@@ -509,6 +996,17 @@ const ProductDetail: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Room Visualizer Modal */}
+      <Modal
+        isOpen={isRoomVisualizerOpen}
+        onClose={() => setIsRoomVisualizerOpen(false)}
+      >
+        <RoomVisualizer
+          productDimensions={defaultProductDimensions}
+          productImage={getProductImageUrl(selectedImage || product.image_url)}
+        />
+      </Modal>
     </div>
   );
 };
