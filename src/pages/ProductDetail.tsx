@@ -787,16 +787,21 @@ const ProductDetail: React.FC = () => {
               className="w-full rounded-lg"
             />
             <div className="absolute bottom-4 right-4 flex gap-2">
-              <button
-                onClick={() => setIsRoomVisualizerOpen(true)}
-                className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-colors group relative"
-                title="Check Room Fit"
-              >
-                <Ruler className="w-6 h-6 text-gray-700 group-hover:text-primary transition-colors" />
-                <span className="absolute bottom-full right-0 mb-2 hidden group-hover:block whitespace-nowrap bg-gray-900 text-white text-sm py-1 px-2 rounded">
-                  Check Room Fit
-                </span>
-              </button>
+            <div className="absolute bottom-4 right-4 flex gap-2">
+  <button
+    onClick={() => setIsRoomVisualizerOpen(true)}
+    className="bg-[#B49A5E] text-white rounded-full p-4 shadow-lg hover:bg-[#776944] transition-colors transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B49A5E]"
+    title="Check Room Fit"
+  >
+    <Ruler className="w-8 h-8 text-white" />
+    <span className="absolute bottom-full right-0 mb-2 hidden group-hover:block whitespace-nowrap bg-gray-900 text-white text-sm py-1 px-2 rounded">
+      Check Room Fit
+    </span>
+  </button>
+  <span className="absolute bottom-16 right-0 mb-2 bg-blue-500 text-white text-sm py-1 px-2 rounded">
+    Try our Room Fit Checker!
+  </span>
+</div>
             </div>
           </div>
 
