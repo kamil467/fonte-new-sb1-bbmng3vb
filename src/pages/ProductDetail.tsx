@@ -55,7 +55,7 @@ interface RoomDimensions {
 }
 
 const ROOM_BACKGROUNDS = [
-  '/room-templates/living-room-1.jpeg',
+  '/room-templates/living-room-1.jpg',
   '/room-templates/living-room-2.jpeg',
   '/room-templates/living-room-3.avif',
   '/room-templates/living-room-4.jpg'
@@ -349,7 +349,7 @@ const RoomVisualizer: React.FC<{
                 onChange={(e) => setSelectedRoom(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
               >
-                <option value="/room-templates/living-room-1.jpeg">Living Room 1</option>
+                <option value="/room-templates/living-room-1.jpg">Living Room 1</option>
                 <option value="/room-templates/living-room-2.jpeg">Living Room 2</option>
                 <option value="/room-templates/living-room-3.avif">Living Room 3</option>
                 <option value="/room-templates/living-room-4.jpg">Living Room 4</option>
